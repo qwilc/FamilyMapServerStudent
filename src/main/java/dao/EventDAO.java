@@ -11,18 +11,15 @@ import java.sql.SQLException;
 /**
  * The EventDAO class handles connecting to the database in order to query or modify the event table
  */
-public class EventDAO {
-    /**
-     * The connection to the database
-     */
-    private final Connection conn;
-
+public class EventDAO extends DAO{
     /**
      * Creates an EventDAO object
      *
      * @param conn the database connection
      */
-    public EventDAO(Connection conn) { this.conn = conn; }
+    public EventDAO(Connection conn) {
+        super(conn);
+    }
 
     /**
      * Inserts the specified event into the table
@@ -30,20 +27,21 @@ public class EventDAO {
      * @param event the event to insert
      * @throws DataAccessException if an SQLException is caught
      */
-    public void insert(Event event) throws DataAccessException {
-        String sql = "insert into events (eventID, associatedUsername, personID, latitude, longitude, " +
+    @Override
+    public void insert(Model event) throws DataAccessException {
+        String sql = "insert into event (eventID, associatedUsername, personID, latitude, longitude, " +
                 "country, city, eventType, year) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, event.getEventID());
-            stmt.setString(2, event.getAssociatedUsername());
-            stmt.setString(3, event.getPersonID());
-            stmt.setDouble(4, event.getLatitude());
-            stmt.setDouble(5, event.getLongitude());
-            stmt.setString(6, event.getCountry());
-            stmt.setString(7, event.getCity());
-            stmt.setString(8, event.getEventType());
-            stmt.setInt(9, event.getYear());
+            stmt.setString(1, ((Event)event).getEventID());
+            stmt.setString(2, ((Event) event).getAssociatedUsername());
+            stmt.setString(3, ((Event) event).getPersonID());
+            stmt.setDouble(4, ((Event) event).getLatitude());
+            stmt.setDouble(5, ((Event) event).getLongitude());
+            stmt.setString(6, ((Event) event).getCountry());
+            stmt.setString(7, ((Event) event).getCity());
+            stmt.setString(8, ((Event) event).getEventType());
+            stmt.setInt(9, ((Event) event).getYear());
 
             stmt.executeUpdate();
         }
@@ -64,7 +62,7 @@ public class EventDAO {
         Event event;
         ResultSet rs;
 
-        String sql = "select * from events where eventID = ?;";
+        String sql = "select * from event where eventID = ?;";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eventID);
@@ -94,19 +92,14 @@ public class EventDAO {
      */
     public void delete(String eventID) throws DataAccessException {}
 
+    public void deleteUserEvents() throws DataAccessException {}
+
     /**
      * Clears all rows of the event table in the database
      * @throws DataAccessException if an SQLException is caught
      */
+    @Override
     public void clear() throws DataAccessException {
-        String sql = "delete from events";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.executeUpdate();
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+        super.clear("event");
     }
 }

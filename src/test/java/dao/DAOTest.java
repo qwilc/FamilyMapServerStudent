@@ -14,57 +14,60 @@ public abstract class DAOTest {
     protected Database db;
     protected Model model;
     protected DAO dao;
+    protected String primaryKey;
 
     @BeforeEach
     public void setUp() throws DataAccessException {
         db = new Database();
-        this.setModel();
         Connection conn = db.getConnection();
-        this.setDAO(conn);
+        this.initializeInstanceVariables(conn);
     }
 
-    protected abstract void setModel();
-
-    protected abstract void setDAO(Connection conn);
+    protected abstract void initializeInstanceVariables(Connection conn);
 
     @AfterEach
     public void tearDown() throws DataAccessException {
         db.closeConnection(false);
     }
 
-    public void testInsert(String id) throws DataAccessException {
+    @Test
+    public void testInsert() throws DataAccessException {
         dao.insert(model);
 
-        Model compareTest = dao.query(id);
+        Model compareTest = dao.query(primaryKey);
 
         assertNotNull(compareTest);
 
         assertEquals(model, compareTest);
     }
 
+    @Test
     public void testInsertFail() throws DataAccessException {
         dao.insert(model);
 
         assertThrows(DataAccessException.class, ()-> dao.insert(model));
     }
 
-    public void testQuery(String id) throws DataAccessException {
+    @Test
+    public void testQuery() throws DataAccessException {
         dao.insert(model);
 
-        Model compareTest = dao.query(id);
+        Model compareTest = dao.query(primaryKey);
 
         assertNotNull(compareTest);
 
         assertEquals(model, compareTest);
     }
 
-    public void testQueryFail(String id) throws DataAccessException {
-        assertNull(dao.query(id));
+    @Test
+    public void testQueryFail() throws DataAccessException {
+        assertNull(dao.query(primaryKey));
     }
 
-    public void testClear(String id) throws DataAccessException {
+    @Test
+    public void testClear() throws DataAccessException {
         dao.insert(model);
         dao.clear();
-        assertNull(dao.query("id"));
+        assertNull(dao.query(primaryKey));
     }
 }

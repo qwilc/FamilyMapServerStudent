@@ -3,7 +3,7 @@ package result;
 /**
  * The LoginResult class stores the data for the result body for a login request
  */
-public class LoginResult extends Result {
+public class LoginResult extends Result { //TODO: Find a better name because this is also the register result
     /**
      * The authentication token generated for this login
      */

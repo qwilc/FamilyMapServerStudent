@@ -84,6 +84,6 @@ public class AuthTokenDAO extends DAO {
      */
     @Override
     public void clear() throws DataAccessException {
-        super.clear("authtoken"); //TODO: Is that a thing you can do?
+        super.clear("authtoken");
     }
 }

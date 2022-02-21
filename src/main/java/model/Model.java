@@ -1,4 +1,5 @@
 package model;
 
-public class Model {
+public abstract class Model {
+    public abstract boolean equals(Object o);
 }

@@ -1,6 +1,7 @@
 package dao;
 
 import model.Event;
+import model.Model;
 import model.Person;
 
 import java.sql.Connection;
@@ -11,18 +12,16 @@ import java.sql.SQLException;
 /**
  * The PersonDAO class handles connecting to the database in order to query or modify the person table
  */
-public class PersonDAO {
-    /**
-     * The connection to the database
-     */
-    private final Connection conn;
+public class PersonDAO extends DAO{
 
     /**
      * Creates a PersonDAO object
      *
      * @param conn the database connection
      */
-    public PersonDAO(Connection conn) { this.conn = conn; }
+    public PersonDAO(Connection conn) {
+        super(conn);
+    }
 
     /**
      * Inserts the specified person into the table
@@ -30,20 +29,21 @@ public class PersonDAO {
      * @param person the person to insert
      * @throws DataAccessException if an SQLException is caught
      */
-    public void insert(Person person) throws DataAccessException {
+    @Override
+    public void insert(Model person) throws DataAccessException {
         String sql = "insert into person(personID, associatedUsername, firstName, lastName, gender, " +
                 "fatherID, motherID, spouseID) " +
                 "values (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, person.getPersonID());
-            stmt.setString(2, person.getAssociatedUsername());
-            stmt.setString(3, person.getFirstName());
-            stmt.setString(4, person.getLastName());
-            stmt.setString(5, person.getGender());
-            stmt.setString(6, person.getFatherID());
-            stmt.setString(7, person.getMotherID());
-            stmt.setString(8, person.getSpouseID());
+            stmt.setString(1, ((Person) person).getPersonID());
+            stmt.setString(2, ((Person) person).getAssociatedUsername());
+            stmt.setString(3, ((Person) person).getFirstName());
+            stmt.setString(4, ((Person) person).getLastName());
+            stmt.setString(5, ((Person) person).getGender());
+            stmt.setString(6, ((Person) person).getFatherID());
+            stmt.setString(7, ((Person) person).getMotherID());
+            stmt.setString(8, ((Person) person).getSpouseID());
 
             stmt.executeUpdate();
         }
@@ -102,19 +102,14 @@ public class PersonDAO {
      */
     public void delete(String personID) throws DataAccessException {}
 
+    public void deleteUserPeople() throws DataAccessException {}
+
     /**
      * Clears all rows of the person table in the database
      * @throws DataAccessException if an SQLException is caught
      */
+    @Override
     public void clear() throws DataAccessException {
-        String sql = "delete from person";
-
-        try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.executeUpdate();
-        }
-        catch(SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+        super.clear("person");
     }
 }
