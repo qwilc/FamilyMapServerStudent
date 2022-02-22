@@ -7,11 +7,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 /**
  * The AuthTokenDAO class handles connecting to the database in order to query or modify the authtoken table
  */
 public class AuthTokenDAO extends DAO {
+    private static Logger logger = Logger.getLogger("AuthTokenDAO");
 
     public AuthTokenDAO(Connection conn) {
         super(conn);
