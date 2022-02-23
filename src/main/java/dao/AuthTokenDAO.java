@@ -27,7 +27,7 @@ public class AuthTokenDAO extends DAO {
      */
     @Override
     public void insert(Model authToken) throws DataAccessException {
-        String sql = "insert into authtoken (authtoken, username) values(?, ?)";
+        String sql = "insert into authtoken(authtoken, username) values(?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, ((AuthToken) authToken).getAuthtoken());
