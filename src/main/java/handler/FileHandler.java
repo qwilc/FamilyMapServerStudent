@@ -54,9 +54,7 @@ public class FileHandler extends Handler {
             }
         }
         catch(IOException ex) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0); //TODO: Non-deprecated error?
-            exchange.getResponseBody().close();
-            ex.printStackTrace();
+            handleException(ex, exchange);
         }
     }
 

@@ -3,19 +3,19 @@ package result;
 /**
  * The LoginResult class stores the data for the result body for a login request
  */
-public class LoginResult extends Result { //TODO: Find a better name because this is also the register result
+public class LoginRegisterResult extends Result {
     /**
      * The authentication token generated for this login
      */
     private String authtoken;
     /**
-     * The username of the person logging in
+     * The username of the user logging in
      */
     private String username;
     /**
-     * The password of the person logging in
+     * The personID of the user logging in
      */
-    private String password;
+    private String personID;
 
     /**
      * Creates a LoginResult object
@@ -24,13 +24,13 @@ public class LoginResult extends Result { //TODO: Find a better name because thi
      * @param success indicates whether the request was successful
      * @param authtoken the authentication token
      * @param username the username
-     * @param password the password
+     * @param personID the password
      */
-    public LoginResult(String message, boolean success, String authtoken, String username, String password) {
+    public LoginRegisterResult(String message, boolean success, String authtoken, String username, String personID) {
         super(message, success);
         this.authtoken = authtoken;
         this.username = username;
-        this.password = password;
+        this.personID = personID;
     }
 
     public String getAuthtoken() {
@@ -49,11 +49,11 @@ public class LoginResult extends Result { //TODO: Find a better name because thi
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPersonID() {
+        return personID;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPersonID(String personID) {
+        this.personID = personID;
     }
 }

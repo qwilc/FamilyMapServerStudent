@@ -7,6 +7,8 @@ import service.ClearService;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 
@@ -20,12 +22,12 @@ public class ClearHandler extends Handler {
                 ClearService service = new ClearService();
                 Result result = service.clear();
 
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                OutputStream resBody = exchange.getResponseBody();
+                Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
 
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                 Gson gson = new Gson();
-                gson.toJson((Object) result, (Type) resBody); //TODO: Are those castings right?
-                resBody.close();
+                gson.toJson(result, responseBody);
+                responseBody.close();
 
                 success = true;
             }
@@ -36,9 +38,7 @@ public class ClearHandler extends Handler {
             }
         }
         catch(IOException ex) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
-            exchange.getResponseBody().close();
-            ex.printStackTrace();
+            handleException(ex, exchange);
         }
     }
 }

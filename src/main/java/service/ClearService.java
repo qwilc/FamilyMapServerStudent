@@ -19,7 +19,7 @@ public class ClearService {
         Database database = new Database();
         Result result;
 
-        try(Connection conn = database.openConnection()) {
+        try(Connection conn = database.getConnection()) {
             new AuthTokenDAO(conn).clear();
             new EventDAO(conn).clear();
             new PersonDAO(conn).clear();
@@ -29,7 +29,7 @@ public class ClearService {
             database.closeConnection(true);
         }
         catch(DataAccessException | SQLException ex) {
-            result = new Result("Error:Clear service was unsuccessful", false);
+            result = new Result("Error: Clear was unsuccessful", false);
             ex.printStackTrace();
         }
 
