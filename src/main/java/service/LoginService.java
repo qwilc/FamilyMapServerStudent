@@ -40,8 +40,9 @@ public class LoginService {
                 result.setSuccess(false);
             }
             else if(Objects.equals(user.getPassword(), password)) {
-                result.setUsername(username);
                 result.setPersonID(user.getPersonID());
+
+                result.setUsername(username);
                 result.setSuccess(true);
 
                 String authToken = UUID.randomUUID().toString();

@@ -2,33 +2,36 @@ package handler;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import request.LoginRequest;
+import request.RegisterRequest;
 import result.LoginRegisterResult;
-import service.LoginService;
+import service.RegisterService;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
-public class LoginHandler extends Handler {
-    private Logger logger = Logger.getLogger("LoginHandler");
+public class RegisterHandler extends Handler {
+    private Logger logger = Logger.getLogger("RegisterHandler");
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         boolean success = false;
 
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("post")) {
+            if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
 
                 logger.info(requestData);
 
                 Gson gson = new Gson();
-                LoginRequest request = gson.fromJson(requestData, LoginRequest.class);
+                RegisterRequest request = gson.fromJson(requestData, RegisterRequest.class);
 
-                LoginService service = new LoginService();
-                LoginRegisterResult result = service.login(request);
+                RegisterService service = new RegisterService();
+                LoginRegisterResult result = service.register(request);
 
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                 Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
@@ -43,7 +46,7 @@ public class LoginHandler extends Handler {
                 exchange.getResponseBody().close();
             }
         }
-        catch(IOException ex) {
+        catch (IOException ex) {
             handleIOException(ex, exchange);
         }
     }

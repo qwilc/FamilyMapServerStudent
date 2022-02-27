@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * The EventDAO class handles connecting to the database in order to query or modify the event table
@@ -67,7 +68,7 @@ public class EventDAO extends DAO{
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eventID);
             rs = stmt.executeQuery();
-            if (rs.next()) {
+            if(rs.next()) {
                 event = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
                         rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
                         rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
@@ -76,6 +77,73 @@ public class EventDAO extends DAO{
             }
             else {
                 return null;
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new DataAccessException();
+        }
+    }
+
+    public Event[] queryByPerson(String personID) throws DataAccessException {
+        Event event;
+        ArrayList<Event> events = new ArrayList<>();
+        ResultSet rs;
+
+        String sql = "select * from event where personID = ?;";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, personID);
+            rs = stmt.executeQuery();
+            int i = 0;
+            while(rs.next()) {
+                event = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
+                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
+                        rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
+                        rs.getInt("year"));
+                events.add(event);
+                i++;
+            }
+
+            if(i == 0) {
+                return null;
+            }
+            else {
+                return events.toArray(new Event[0]);
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new DataAccessException();
+        }
+    }
+
+    public Event[] queryByPersonAndType(String personID, String eventType) throws DataAccessException { //TODO: Reduce repeated code between the two methods
+        Event event;
+        ArrayList<Event> events = new ArrayList<>();
+        ResultSet rs;
+
+        String sql = "select * from event where personID = ? and eventType = ?;";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, personID);
+            stmt.setString(2, eventType);
+            rs = stmt.executeQuery();
+            int i = 0;
+            while(rs.next()) {
+                event = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
+                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
+                        rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
+                        rs.getInt("year"));
+                events.add(event);
+                i++;
+            }
+
+            if(i == 0) {
+                return null;
+            }
+            else {
+                return events.toArray(new Event[0]);
             }
         }
         catch (SQLException ex) {

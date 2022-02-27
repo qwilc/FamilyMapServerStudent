@@ -1,6 +1,5 @@
 package handler;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.File;
@@ -54,7 +53,7 @@ public class FileHandler extends Handler {
             }
         }
         catch(IOException ex) {
-            handleException(ex, exchange);
+            handleIOException(ex, exchange);
         }
     }
 

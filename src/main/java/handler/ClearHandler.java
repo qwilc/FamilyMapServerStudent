@@ -6,10 +6,8 @@ import result.Result;
 import service.ClearService;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 
 public class ClearHandler extends Handler {
@@ -38,7 +36,7 @@ public class ClearHandler extends Handler {
             }
         }
         catch(IOException ex) {
-            handleException(ex, exchange);
+            handleIOException(ex, exchange);
         }
     }
 }

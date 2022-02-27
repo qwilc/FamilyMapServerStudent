@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The Event class stores the data for a row of the event table in the database.
@@ -70,6 +71,18 @@ public class Event extends Model {
         this.year = year;
     }
 
+    public Event(String username, String personID, double latitude, double longitude,
+                 String country, String city, String eventType, int year) {
+        this.eventID = UUID.randomUUID().toString();
+        this.associatedUsername = username;
+        this.personID = personID;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.country = country;
+        this.city = city;
+        this.eventType = eventType;
+        this.year = year;
+    }
 
     public String getEventID() {
         return eventID;
