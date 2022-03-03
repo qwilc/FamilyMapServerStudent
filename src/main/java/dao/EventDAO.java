@@ -63,7 +63,7 @@ public class EventDAO extends DAO{
         Event event;
         ResultSet rs;
 
-        String sql = "select * from event where eventID = ?;";
+        String sql = "select * from event where eventID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eventID);
@@ -90,17 +90,22 @@ public class EventDAO extends DAO{
         ArrayList<Event> events = new ArrayList<>();
         ResultSet rs;
 
-        String sql = "select * from event where personID = ?;";
+        String sql = "select * from event where personID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, personID);
             rs = stmt.executeQuery();
             int i = 0;
             while(rs.next()) {
-                event = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
-                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
-                        rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
-                        rs.getInt("year"));
+                event = new Event(rs.getString("eventID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("personID"),
+                        rs.getFloat("latitude"),
+                        rs.getFloat("longitude"),
+                        rs.getString("country"),
+                        rs.getString("city"),
+                        rs.getString("eventType"),
+                        rs.getInt("year") );
                 events.add(event);
                 i++;
             }
@@ -123,7 +128,7 @@ public class EventDAO extends DAO{
         ArrayList<Event> events = new ArrayList<>();
         ResultSet rs;
 
-        String sql = "select * from event where personID = ? and eventType = ?;";
+        String sql = "select * from event where personID = ? and eventType = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, personID);

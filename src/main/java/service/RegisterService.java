@@ -5,12 +5,15 @@ import dao.DataAccessException;
 import dao.Database;
 import dao.UserDAO;
 import model.AuthToken;
+import model.Person;
 import model.User;
 import request.RegisterRequest;
 import result.LoginRegisterResult;
+import treeGenerator.TreeGenerator;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -37,8 +40,12 @@ public class RegisterService {
 
             UserDAO dao = new UserDAO(conn);
 
-            if(dao.query(username) != null) {
-                result.setMessage("Error: Registration was unsuccessful");
+            if(hasInvalidField(request)) { //TODO: Should I break this down into different errors?
+                result.setMessage("Error: Invalid or empty field");
+                result.setSuccess(false);
+            }
+            else if(dao.query(username) != null) {
+                result.setMessage("Error: This username is not available");
                 result.setSuccess(false);
             }
             else {
@@ -56,9 +63,10 @@ public class RegisterService {
                 new AuthTokenDAO(conn).insert(new AuthToken(authToken, username));
                 result.setAuthtoken(authToken);
 
-                database.closeConnection(true);
+                TreeGenerator generator = new TreeGenerator(conn, user);
+                generator.generateTree(4);
 
-                //TODO: generate family stuff
+                database.closeConnection(true);
             }
         }
         catch (SQLException | DataAccessException ex) {
@@ -67,6 +75,23 @@ public class RegisterService {
             ex.printStackTrace();
         }
         return result;
+    }
+
+    private boolean hasInvalidField(RegisterRequest request) {
+        return isEmptyField(request.getUsername())
+        || isEmptyField(request.getPassword())
+        || isEmptyField(request.getEmail())
+        || isEmptyField(request.getFirstName())
+        || isEmptyField(request.getLastName())
+        || !isValidGender(request.getGender());
+    }
+
+    private boolean isEmptyField(String field) {
+        return field == null || field.equals("");
+    }
+
+    private boolean isValidGender(String gender) {
+        return Objects.equals(gender, "m") || Objects.equals(gender, "f");
     }
 
 }

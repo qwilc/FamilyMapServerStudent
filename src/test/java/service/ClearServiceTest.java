@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import result.Result;
 
+import java.security.Provider;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ClearServiceTest {
@@ -37,6 +39,10 @@ public class ClearServiceTest {
         assertNotNull(result);
         assertEquals("Clear succeeded.", result.getMessage());
         assertTrue(result.isSuccess());
+        assertNull(new UserDAO(db.getConnection()).query("username"));
+        assertNull(new PersonDAO(db.getConnection()).query("testID"));
+        assertNull(new EventDAO(db.getConnection()).query("eventID"));
+        db.closeConnection(true);
     }
 
     @Test

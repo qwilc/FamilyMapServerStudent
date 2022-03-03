@@ -7,21 +7,34 @@ import helperData.DataReader;
 import helperData.Location;
 import model.Event;
 import model.Person;
+import model.User;
 
 import java.sql.Connection;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class TreeGenerator {
+    private User user;
+    private int numPeopleAdded = 0;
+    private int numEventsAdded = 0;
     private final Connection conn;
     private final String associatedUsername;
     private final Logger logger = Logger.getLogger("TreeGenerator");
     private Random random = new Random();
 
-    public TreeGenerator(Connection conn, String associatedUsername) {
+    public TreeGenerator(Connection conn, User user) {
         this.conn = conn;
-        this.associatedUsername = associatedUsername;
+        this.user = user;
+        this.associatedUsername = user.getUsername();
+    }
+
+    public void generateTree(int numGenerations) {
+        Person userPerson = generateUserPerson();
+        if(numGenerations > 0) {
+            generateAncestors(userPerson, numGenerations);
+        }
     }
 
     public void generateAncestors(Person person, int numGenerations) {
@@ -29,7 +42,10 @@ public class TreeGenerator {
 
         Person mother = generatePerson("f", childBirthYear);
         Person father = generatePerson("m", childBirthYear);
+
         generateMarriageEvent(mother, father);
+        mother.setSpouseID(father.getPersonID());
+        father.setSpouseID(mother.getPersonID());
 
         person.setMotherID(mother.getPersonID());
         person.setFatherID(father.getPersonID());
@@ -51,6 +67,7 @@ public class TreeGenerator {
         try {
             PersonDAO dao = new PersonDAO(conn);
             dao.insert(person);
+            numPeopleAdded++;
         }
         catch (DataAccessException ex) {
             logger.severe("Error inserting randomly generated person into database");
@@ -58,9 +75,9 @@ public class TreeGenerator {
         }
     }
 
-    public Person generatePerson(String gender) {
-        Person person = new Person(associatedUsername, null, null, gender, null, null, null);
-        setRandomName(person, gender);
+    public Person generateUserPerson() {
+        Person person = new Person(associatedUsername, user.getFirstName(), user.getLastName(), user.getGender(), null, null, null);
+        setRandomName(person);
 
         generateUserBirthEvent(person.getPersonID());
 
@@ -69,7 +86,7 @@ public class TreeGenerator {
 
     public Person generatePerson(String gender, int childBirthYear) {
         Person person = new Person(associatedUsername, null, null, gender, null, null, null);
-        setRandomName(person, gender);
+        setRandomName(person);
 
         generateBirthEvent(person.getPersonID(), childBirthYear, gender);
         generateDeathEvent(person.getPersonID());
@@ -77,20 +94,16 @@ public class TreeGenerator {
         return person;
     }
 
-    private void setRandomName(Person person, String gender) {
-        person.setFirstName(selectFirstName(gender));
-        person.setLastName(selectLastName());
-    }
-
     private void generateMarriageEvent(Person mother, Person father) {
-        int marriageYear = getBirthYear(mother.getPersonID());
+        int marriageYear = getBirthYear(mother.getPersonID()) + 25;
         Event marriage = new Event(associatedUsername, null, 0, 0, null, null, "marriage", marriageYear);
         setRandomLocation(marriage);
 
         marriage.setPersonID(mother.getPersonID());
         addEventToDatabase(marriage);
 
-        marriage.setPersonID(father.getPersonID()); //TODO: This works, right? I don't have to create a copy?
+        marriage.setEventID(UUID.randomUUID().toString());
+        marriage.setPersonID(father.getPersonID());
         addEventToDatabase(marriage);
     }
 
@@ -118,6 +131,7 @@ public class TreeGenerator {
         try {
             EventDAO dao = new EventDAO(conn);
             dao.insert(event);
+            numEventsAdded++;
         }
         catch (DataAccessException ex) {
             logger.severe("Error inserting randomly generated event into database");
@@ -140,6 +154,11 @@ public class TreeGenerator {
         assert possibleLocations != null;
         int index = random.nextInt(possibleLocations.length);
         return possibleLocations[index];
+    }
+
+    private void setRandomName(Person person) {
+        person.setFirstName(selectFirstName(person.getGender()));
+        person.setLastName(selectLastName());
     }
 
     private String selectFirstName(String gender) {
@@ -180,5 +199,13 @@ public class TreeGenerator {
             ex.printStackTrace();
         }
         return -1;
+    }
+
+    public int getNumPeopleAdded() {
+        return numPeopleAdded;
+    }
+
+    public int getNumEventsAdded() {
+        return numEventsAdded;
     }
 }

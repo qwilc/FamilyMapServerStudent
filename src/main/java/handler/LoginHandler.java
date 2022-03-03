@@ -11,14 +11,13 @@ import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
 public class LoginHandler extends Handler {
-    private Logger logger = Logger.getLogger("LoginHandler");
+    private final Logger logger = Logger.getLogger("LoginHandler");
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        boolean success = false;
-
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("post")) {
+            LoginRegisterResult result = null;
+            if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
 
@@ -28,20 +27,16 @@ public class LoginHandler extends Handler {
                 LoginRequest request = gson.fromJson(requestData, LoginRequest.class);
 
                 LoginService service = new LoginService();
-                LoginRegisterResult result = service.login(request);
+                result = service.login(request);
 
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
-                gson.toJson(result, responseBody);
-                responseBody.close();
-
-                success = true;
+                success = result.isSuccess();
             }
 
             if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+                sendBadRequestResponse(exchange);
             }
+
+            sendResponseBody(exchange, result);
         }
         catch(IOException ex) {
             handleIOException(ex, exchange);

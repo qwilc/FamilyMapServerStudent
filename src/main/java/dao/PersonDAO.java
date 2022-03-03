@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * The PersonDAO class handles connecting to the database in order to query or modify the person table
@@ -78,6 +79,44 @@ public class PersonDAO extends DAO{
             }
             else {
                 return null;
+            }
+        }
+        catch(SQLException ex) {
+            ex.printStackTrace();
+            throw new DataAccessException();
+        }
+    }
+
+    public Person[] queryByUser(String username) throws DataAccessException {
+        Person person;
+        ArrayList<Person> people = new ArrayList<>();
+        ResultSet rs;
+
+        String sql = "select * from person where associatedUsername = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+            int i = 0;
+            while(rs.next()) {
+                person = new Person(
+                        rs.getString("personID"),
+                        rs.getString("associatedUsername"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("gender"),
+                        rs.getString("fatherID"),
+                        rs.getString("motherID"),
+                        rs.getString("spouseID") );
+                people.add(person);
+                i++;
+            }
+
+            if(i == 0) {
+                return null;
+            }
+            else {
+                return people.toArray(new Person[0]);
             }
         }
         catch(SQLException ex) {

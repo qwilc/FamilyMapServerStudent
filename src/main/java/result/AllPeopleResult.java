@@ -9,25 +9,25 @@ public class AllPeopleResult extends Result {
     /**
      * an array of all the people associated with a given user
      */
-    private Person[] people;
+    private Person[] data;
 
     /**
      * Creates an AllPeopleResult object
      *
      * @param message The message to return in case of an error
      * @param success indicates whether the request was successful
-     * @param people the people
+     * @param data the people
      */
-    public AllPeopleResult(String message, boolean success, Person[] people) {
+    public AllPeopleResult(String message, boolean success, Person[] data) {
         super(message, success);
-        this.people = people;
+        this.data = data;
     }
 
-    public Person[] getPeople() {
-        return people;
+    public Person[] getData() {
+        return data;
     }
 
-    public void setPeople(Person[] people) {
-        this.people = people;
+    public void setData(Person[] data) {
+        this.data = data;
     }
 }

@@ -14,8 +14,6 @@ public class FileHandler extends Handler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        boolean success = false;
-
         try {
             if(exchange.getRequestMethod().toLowerCase().equals("get")) {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
@@ -40,7 +38,7 @@ public class FileHandler extends Handler {
                     success = true;
                 }
                 else {
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0); //TODO: Do I need to close the response here? Use the sendBadResponse method?
                 }
             }
             else {

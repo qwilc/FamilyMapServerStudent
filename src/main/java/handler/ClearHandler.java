@@ -13,26 +13,18 @@ import java.net.HttpURLConnection;
 public class ClearHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        boolean success = false;
-
         try {
             if(exchange.getRequestMethod().toLowerCase().equals("post")) {
                 ClearService service = new ClearService();
                 Result result = service.clear();
 
-                Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
+                sendResponseBody(exchange, result);
 
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                Gson gson = new Gson();
-                gson.toJson(result, responseBody);
-                responseBody.close();
-
-                success = true;
+                success = result.isSuccess();
             }
 
             if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+                sendBadRequestResponse(exchange);
             }
         }
         catch(IOException ex) {

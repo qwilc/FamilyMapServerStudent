@@ -18,8 +18,6 @@ public class RegisterHandler extends Handler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        boolean success = false;
-
         try {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream requestBody = exchange.getRequestBody();
@@ -38,7 +36,7 @@ public class RegisterHandler extends Handler {
                 gson.toJson(result, responseBody);
                 responseBody.close();
 
-                success = true;
+                success = result.isSuccess();
             }
 
             if (!success) {

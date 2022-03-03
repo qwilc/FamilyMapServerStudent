@@ -13,7 +13,7 @@ public class PersonService {
      * @param personID the person ID
      * @return a PersonResult object with the outcome of the person request
      */
-    public PersonResult person(String authtoken, String personID) {
+    public PersonResult person(String authtoken, String username, String personID) {
         return null;
     }
 }

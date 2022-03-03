@@ -72,6 +72,23 @@ public class AuthTokenDAO extends DAO {
         }
     }
 
+    public boolean isValidAuthToken(String authToken, String username) throws DataAccessException {
+        ResultSet rs;
+
+        String sql = "select * from authtoken where authtoken = ? and username = ?;";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, authToken);
+            stmt.setString(2, username);
+            rs = stmt.executeQuery();
+            return rs.next();
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new DataAccessException();
+        }
+    }
+
     /**
      * Deletes the specified authentication token
      *
