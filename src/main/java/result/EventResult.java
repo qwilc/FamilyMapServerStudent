@@ -1,6 +1,7 @@
 package result;
 
 import model.Event;
+import model.Model;
 
 /**
  * The EventResult class stores the data for the result body for event requests where an event ID was specified
@@ -72,7 +73,9 @@ public class EventResult extends Result {
         this.year = year;
     }
 
-    public void setDataFromEvent(Event event) {
+    @Override
+    public void setDataFromModel(Model model) {
+        Event event = (Event) model;
         this.associatedUsername = event.getAssociatedUsername();
         this.eventID = event.getEventID();
         this.personID = event.getPersonID();

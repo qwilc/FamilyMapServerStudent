@@ -6,6 +6,7 @@ import dao.Database;
 import dao.EventDAO;
 import model.AuthToken;
 import model.Event;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import result.EventResult;
 
@@ -15,14 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class EventServiceTest extends ServiceTest {
     private EventService service = new EventService();
+    private String authToken = "token";
+    private String username = "username";
+    private String eventID = "ID";
 
-    @Test
-    public void testEventPass() throws DataAccessException {
+    @BeforeEach
+    public void insertData() throws DataAccessException {
         clearService.clear();
-
-        String authToken = "token";
-        String username = "username";
-        String eventID = "ID";
 
         Event testEvent = new Event(
                 eventID,
@@ -45,10 +45,23 @@ public class EventServiceTest extends ServiceTest {
         eventDAO.insert(testEvent);
         db.closeConnection(true);
 
+    }
+
+    @Test
+    public void testEventPass() {
         EventResult result = service.event(authToken, eventID);
 
         assertNotNull(result);
         assertNull(result.getMessage());
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testEventInvalidToken() {
+        EventResult result = service.event("invalidToken", eventID);
+
+        assertNotNull(result);
+        assertEquals("Error: Invalid authtoken", result.getMessage());
+        assertFalse(result.isSuccess());
     }
 }

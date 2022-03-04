@@ -8,7 +8,7 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EventDAOTest extends DAOTest { //TODO: Apparently decimal latitude/longitude don't pass some of the tests?
+public class EventDAOTest extends DAOTest {
     Event testEvent = new Event("ID1", "username", "personID1", 1, 2, "country",
             "city", "type", 1900);
 

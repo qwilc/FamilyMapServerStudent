@@ -85,6 +85,7 @@ public class Person extends Model {
         this.personID = personID;
     }
 
+    @Override
     public String getAssociatedUsername() {
         return associatedUsername;
     }

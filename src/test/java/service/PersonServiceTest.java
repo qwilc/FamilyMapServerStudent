@@ -70,7 +70,7 @@ public class PersonServiceTest extends ServiceTest {
         PersonResult result = service.person(authTokenString, "invalid ID");
 
         assertNotNull(result);
-        assertEquals("Error: Invalid person ID", result.getMessage());
+        assertEquals("Error: Invalid ID", result.getMessage());
         assertFalse(result.isSuccess());
     }
 
@@ -79,7 +79,7 @@ public class PersonServiceTest extends ServiceTest {
         PersonResult result = service.person(authTokenString, "ID3");
 
         assertNotNull(result);
-        assertEquals("Error: This person is not associated with this user", result.getMessage());
+        assertEquals("Error: This user is not associated with the requested data", result.getMessage());
         assertFalse(result.isSuccess());
     }
 }

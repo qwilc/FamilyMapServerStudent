@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RegisterServiceTest extends ServiceTest {
     private final RegisterService service = new RegisterService();
 
-    @BeforeEach //TODO: I literally just copied this from the login request test
+    @BeforeEach //TODO: Reduce shared code with login request test
     public void insertUsers() throws DataAccessException {
         clearService.clear();
 

@@ -1,5 +1,6 @@
 package result;
 
+import model.Model;
 import model.Person;
 
 /**
@@ -66,7 +67,9 @@ public class PersonResult extends Result {
         this.spouseID = spouseID;
     }
 
-    public void setDataFromPerson(Person person) {
+    @Override
+    public void setDataFromModel(Model model) {
+        Person person = (Person) model;
         personID = person.getPersonID();
         associatedUsername = person.getAssociatedUsername();
         firstName = person.getFirstName();

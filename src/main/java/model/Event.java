@@ -92,6 +92,7 @@ public class Event extends Model {
         this.eventID = eventID;
     }
 
+    @Override
     public String getAssociatedUsername() {
         return associatedUsername;
     }

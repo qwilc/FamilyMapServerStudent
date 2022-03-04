@@ -37,7 +37,7 @@ public class RegisterService {
 
             UserDAO dao = new UserDAO(conn);
 
-            if(hasInvalidField(request)) { //TODO: Should I break this down into different errors?
+            if(hasInvalidField(request)) {
                 result.setMessage("Error: Invalid or empty field");
                 result.setSuccess(false);
             }

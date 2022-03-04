@@ -1,5 +1,7 @@
 package result;
 
+import model.Model;
+
 /**
  * The Result class stores the response body data for clear, fill, load, and register requests
  */
@@ -23,6 +25,8 @@ public class Result {
         this.message = message;
         this.success = success;
     }
+
+    public void setDataFromModel(Model model) {}
 
     public String getMessage() {
         return message;

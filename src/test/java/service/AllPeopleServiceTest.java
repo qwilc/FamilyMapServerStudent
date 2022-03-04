@@ -17,7 +17,7 @@ public class AllPeopleServiceTest extends ServiceTest {
     private final String authTokenString = "token";
 
     @BeforeEach
-    public void insertUser() throws DataAccessException {
+    public void insertData() throws DataAccessException {
         clearService.clear();
         db = new Database();
 
@@ -26,11 +26,6 @@ public class AllPeopleServiceTest extends ServiceTest {
         AuthToken authToken = new AuthToken(authTokenString, username);
         new AuthTokenDAO(db.getConnection()).insert(authToken);
 
-        db.closeConnection(true);
-    }
-
-    @Test
-    public void testGetAllPeople() throws DataAccessException {
         Person person1 = new Person("ID1", username, "name", "name", "f", null, null, null);
         Person person2 = new Person("ID2", username, "name", "name", "f", null, null, null);
         Person person3 = new Person("ID3", "notUsername", "name", "name", "f", null, null, null);
@@ -41,7 +36,10 @@ public class AllPeopleServiceTest extends ServiceTest {
         dao.insert(person3);
 
         db.closeConnection(true);
+    }
 
+    @Test
+    public void testGetAllPeople() {
         AllPeopleResult result = service.people(authTokenString);
 
         assertNotNull(result);
@@ -49,5 +47,14 @@ public class AllPeopleServiceTest extends ServiceTest {
         assertTrue(result.isSuccess());
         assertNotNull(result.getData());
         assertEquals(2, result.getData().length);
+    }
+
+    @Test
+    public void testInvalidAuthtoken() {
+        AllPeopleResult result = service.people("wrongAuthtoken");
+
+        assertNotNull(result);
+        assertEquals("Error: Invalid authtoken", result.getMessage());
+        assertFalse(result.isSuccess());
     }
 }

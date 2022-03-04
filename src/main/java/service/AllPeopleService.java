@@ -1,14 +1,12 @@
 package service;
 
 import dao.*;
-import model.AuthToken;
 import model.Model;
 import model.Person;
 import result.AllPeopleResult;
 import result.Result;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * The AllPeopleService class performs the functionality for person requests without a specified ID
@@ -21,7 +19,7 @@ public class AllPeopleService extends GetDataService {
      * @return an AllPeopleResult object with the outcome of the request
      */
     public AllPeopleResult people(String authtoken) {
-        return (AllPeopleResult) super.getData(authtoken);
+        return (AllPeopleResult) super.getData(authtoken, null);
 //        Database database = new Database();
 //        AllPeopleResult result = new AllPeopleResult(null, false, null);
 //
@@ -69,7 +67,7 @@ public class AllPeopleService extends GetDataService {
     }
 
     @Override
-    protected void setResultData(Model[] array, Result result) {
+    protected void setResultData(Result result, Model[] array) {
         Person[] people = new Person[array.length];
         for(int i = 0; i < array.length; i++) {
             people[i] = (Person) array[i];

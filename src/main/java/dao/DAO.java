@@ -42,7 +42,7 @@ public abstract class DAO {
         }
     }
 
-    public Model[] queryByUser(String username) throws DataAccessException { //TODO: This is only needed for Event/PersonDAO
+    public Model[] queryByUser(String username) throws DataAccessException {
         Model model;
         ArrayList<Model> data = new ArrayList<>();
         ResultSet rs;

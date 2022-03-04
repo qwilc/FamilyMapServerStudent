@@ -63,11 +63,6 @@ public class LoadServiceTest extends ServiceTest {
         request.setPersons(people);
         request.setUsers(users);
 
-        //TODO: Delete this
-        Gson gson = new Gson();
-        String requestJSON = gson.toJson(request);
-        logger.info(requestJSON);
-
         Result result = service.load(request);
 
         assertNotNull(result);

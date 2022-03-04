@@ -7,6 +7,7 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import result.AllEventsResult;
+import result.AllPeopleResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,11 +27,6 @@ public class AllEventsServiceTest extends ServiceTest{
         AuthToken authToken = new AuthToken(authTokenString, username);
         new AuthTokenDAO(db.getConnection()).insert(authToken);
 
-        db.closeConnection(true);
-    }
-
-    @Test
-    public void testGetAllPeople() throws DataAccessException {
         Event event = new Event("ID1", "username", "personID1", 1, 2, "country",
                 "city", "type", 1900);
         Event event1 = new Event("ID2", "username", "personID2", 1, 2, "country",
@@ -44,7 +40,10 @@ public class AllEventsServiceTest extends ServiceTest{
         dao.insert(event2);
 
         db.closeConnection(true);
+    }
 
+    @Test
+    public void testGetAllEvents() throws DataAccessException {
         AllEventsResult result = service.events(authTokenString);
 
         assertNotNull(result);
@@ -53,4 +52,14 @@ public class AllEventsServiceTest extends ServiceTest{
         assertNotNull(result.getData());
         assertEquals(2, result.getData().length);
     }
+
+    @Test
+    public void testInvalidAuthtoken() {
+        AllEventsResult result = service.events("wrongAuthtoken");
+
+        assertNotNull(result);
+        assertEquals("Error: Invalid authtoken", result.getMessage());
+        assertFalse(result.isSuccess());
+    }
+
 }

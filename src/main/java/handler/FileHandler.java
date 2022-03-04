@@ -22,7 +22,7 @@ public class FileHandler extends Handler {
             if(hasCorrectRequestMethod(exchange, "get")) {
                 String urlPath = exchange.getRequestURI().toString();
 
-                if(urlPath == null || urlPath.equals("/")) { //TODO: Could have FilePath(urlPath) method
+                if(urlPath == null || urlPath.equals("/")) {
                     urlPath = "/index.html";
                 }
                 logger.fine(urlPath);

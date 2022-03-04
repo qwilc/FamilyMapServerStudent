@@ -9,10 +9,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class GetDataService {
-    Database database;
     Result result;
 
-    protected Result getData(String authtoken) {
+    protected Result getData(String authtoken, String ID) {
         Database database = new Database();
         initializeResult();
 
@@ -22,18 +21,37 @@ public abstract class GetDataService {
             AuthToken token = authTokenDAO.query(authtoken);
 
             if(token != null) {
-                Model[] array = getDataArray(conn, token.getUsername());
-                database.closeConnection(true);
+                String username = token.getUsername();
 
-                setResultData(array, result);
-                result.setSuccess(true);
+                if(ID == null) {
+                    Model[] data = getDataArray(conn, username);
+                    setResultData(result, data);
+                    result.setSuccess(true);
+                }
+                else {
+                    Model model = getSpecificData(conn, username, ID);
+
+                    if(model == null) {
+                        result.setMessage("Error: Invalid ID");
+                        result.setSuccess(false);
+                    }
+                    else if(model.getAssociatedUsername().equals(username)) {
+                        result.setDataFromModel(model);
+                        result.setSuccess(true);
+                    }
+                    else {
+                        result.setMessage("Error: This user is not associated with the requested data");
+                        result.setSuccess(false);
+                    }
+                }
+                database.closeConnection(true);
             }
             else {
                 result.setMessage("Error: Invalid authtoken");
                 result.setSuccess(false);
             }
         } catch (SQLException | DataAccessException ex) {
-            result.setMessage("Error: Could not get all people associated with user");
+            result.setMessage("Error: Could not get the requested data");
             result.setSuccess(false);
             ex.printStackTrace();
         }
@@ -45,11 +63,15 @@ public abstract class GetDataService {
 
     protected Model[] getDataArray(Connection conn, String username) throws DataAccessException {
         DAO dao = initializeDAO(conn);
-        Model[] array = dao.queryByUser(username);
-        return array;
+        return dao.queryByUser(username);
+    }
+
+    protected Model getSpecificData(Connection conn, String username, String ID) throws DataAccessException {
+        DAO dao = initializeDAO(conn);
+        return dao.query(ID);
     }
 
     protected abstract DAO initializeDAO(Connection conn);
 
-    protected abstract void setResultData(Model[] array, Result result);
+    protected void setResultData(Result result, Model[] array) {}
 }
