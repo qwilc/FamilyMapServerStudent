@@ -48,13 +48,12 @@ public class LoginService {
                 String authToken = UUID.randomUUID().toString();
                 new AuthTokenDAO(conn).insert(new AuthToken(authToken, username));
                 result.setAuthtoken(authToken);
-
-                database.closeConnection(true);
             }
             else {
                 result.setMessage("Error: Invalid password");
                 result.setSuccess(false);
             }
+            database.closeConnection(true);
         }
         catch (SQLException | DataAccessException ex) {
             result.setMessage("Error: Login was unsuccessful");

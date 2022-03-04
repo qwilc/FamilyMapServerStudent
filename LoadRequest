@@ -1,0 +1,36 @@
+{
+	"users":[
+        "username":"susan",
+        "password":"password",
+        "email":"email",
+        "firstName":"Susan",
+        "lastName":"LastName",
+        "gender":"f",
+        "personID":"1234"
+	],
+	"persons":[
+		{
+        	"associatedUsername":"susan",
+        	"personID":"7255e93e",
+        	"firstName":"Stuart",
+            "lastName":"Klocke",
+        	"gender":"m",
+        	"fatherID":"7255e93e",
+        	"motherID":"d3gz214j",
+        	"spouseID":"askdnwjd"
+        }
+	],
+	"events":[
+        {
+        	"associatedUsername":"susan",
+        	"eventID":"251837d7",
+        	"personID":"7255e93e",
+        	"latitude":65.6833,
+        	"longitude":-17.9,
+        	"country":"Iceland",
+        	"city":"Akureyri",
+        	"eventType":"birth",
+        	"year":1912
+        }
+	]
+}

@@ -7,7 +7,6 @@ import result.Result;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.util.logging.Logger;
 
 public abstract class Handler implements HttpHandler {
     protected boolean success = false;
@@ -22,9 +21,9 @@ public abstract class Handler implements HttpHandler {
     }
 
     protected String getRequestData(HttpExchange exchange) throws IOException {
-        InputStream requestBody = exchange.getRequestBody();
-        return readString(requestBody);
-
+        try(InputStream requestBody = exchange.getRequestBody()) {
+            return readString(requestBody);
+        }
     }
 
     protected String[] getSplitPath(HttpExchange exchange) {
@@ -41,10 +40,15 @@ public abstract class Handler implements HttpHandler {
         }
     }
 
-    protected void sendResponseBody(HttpExchange exchange, Result result) throws IOException {
-        Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
+    protected void sendResponse(HttpExchange exchange, Result result) throws IOException {
+        if(result.isSuccess()) {
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        }
+        else {
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+        }
 
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
         Gson gson = new Gson();
         gson.toJson(result, responseBody);
         responseBody.close();

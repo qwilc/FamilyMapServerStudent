@@ -65,9 +65,8 @@ public class RegisterService {
 
                 TreeGenerator generator = new TreeGenerator(conn, user);
                 generator.generateTree(4);
-
-                database.closeConnection(true);
             }
+            database.closeConnection(true);
         }
         catch (SQLException | DataAccessException ex) {
             result.setMessage("Error: Registration was unsuccessful");

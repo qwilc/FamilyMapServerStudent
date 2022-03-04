@@ -1,16 +1,10 @@
 package handler;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import request.LoginRequest;
 import result.Result;
 import service.FillService;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +39,7 @@ public class FillHandler extends Handler {
                     result = service.fill(username, 4);
                 }
 
-                sendResponseBody(exchange, result);
+                sendResponse(exchange, result);
 
                 success = result.isSuccess();
             }
@@ -57,5 +51,6 @@ public class FillHandler extends Handler {
         catch(IOException ex) {
             handleIOException(ex, exchange);
         }
+        exchange.getResponseBody().close();
     }
 }

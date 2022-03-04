@@ -20,6 +20,7 @@ public class EventDAO extends DAO{
      */
     public EventDAO(Connection conn) {
         super(conn);
+        tableName = "event";
     }
 
     /**
@@ -69,10 +70,7 @@ public class EventDAO extends DAO{
             stmt.setString(1, eventID);
             rs = stmt.executeQuery();
             if(rs.next()) {
-                event = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
-                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
-                        rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
-                        rs.getInt("year"));
+                event = getModelFromResultSet(rs);
                 return event;
             }
             else {
@@ -97,15 +95,7 @@ public class EventDAO extends DAO{
             rs = stmt.executeQuery();
             int i = 0;
             while(rs.next()) {
-                event = new Event(rs.getString("eventID"),
-                        rs.getString("associatedUsername"),
-                        rs.getString("personID"),
-                        rs.getFloat("latitude"),
-                        rs.getFloat("longitude"),
-                        rs.getString("country"),
-                        rs.getString("city"),
-                        rs.getString("eventType"),
-                        rs.getInt("year") );
+                event = getModelFromResultSet(rs);
                 events.add(event);
                 i++;
             }
@@ -136,10 +126,7 @@ public class EventDAO extends DAO{
             rs = stmt.executeQuery();
             int i = 0;
             while(rs.next()) {
-                event = new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
-                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
-                        rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
-                        rs.getInt("year"));
+                event = getModelFromResultSet(rs);
                 events.add(event);
                 i++;
             }
@@ -155,6 +142,19 @@ public class EventDAO extends DAO{
             ex.printStackTrace();
             throw new DataAccessException();
         }
+    }
+
+    @Override
+    protected Event getModelFromResultSet(ResultSet rs) throws SQLException {
+        return new Event(rs.getString("eventID"),
+                rs.getString("associatedUsername"),
+                rs.getString("personID"),
+                rs.getFloat("latitude"),
+                rs.getFloat("longitude"),
+                rs.getString("country"),
+                rs.getString("city"),
+                rs.getString("eventType"),
+                rs.getInt("year"));
     }
 
     /**

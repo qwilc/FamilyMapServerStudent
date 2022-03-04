@@ -31,6 +31,8 @@ public class FileHandler extends Handler {
                 File file = new File(filePath);
 
                 if(file.exists()) {
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+
                     OutputStream responseBody = exchange.getResponseBody(); //TODO: Could have WriteToOutputStream(exchange, file) method
                     Files.copy(file.toPath(), responseBody);
                     responseBody.close();
@@ -47,12 +49,12 @@ public class FileHandler extends Handler {
 
             if(!success) {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
-                exchange.getResponseBody().close();
             }
         }
         catch(IOException ex) {
             handleIOException(ex, exchange);
         }
+        exchange.getResponseBody().close();
     }
 
 

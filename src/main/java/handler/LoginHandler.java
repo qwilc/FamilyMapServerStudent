@@ -7,7 +7,6 @@ import result.LoginRegisterResult;
 import service.LoginService;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
 public class LoginHandler extends Handler {
@@ -16,10 +15,10 @@ public class LoginHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            LoginRegisterResult result = null;
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
+                requestBody.close();
 
                 logger.info(requestData);
 
@@ -27,19 +26,24 @@ public class LoginHandler extends Handler {
                 LoginRequest request = gson.fromJson(requestData, LoginRequest.class);
 
                 LoginService service = new LoginService();
-                result = service.login(request);
+                LoginRegisterResult result = service.login(request);
 
                 success = result.isSuccess();
+                logger.info(result.getMessage());
+
+                if(success) {
+                    sendResponse(exchange, result);
+                }
             }
 
             if (!success) {
                 sendBadRequestResponse(exchange);
             }
-
-            sendResponseBody(exchange, result);
         }
         catch(IOException ex) {
             handleIOException(ex, exchange);
         }
+        logger.info("Rcode: " + exchange.getResponseCode());
+        exchange.getResponseBody().close();
     }
 }

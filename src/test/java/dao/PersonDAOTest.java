@@ -1,6 +1,7 @@
 package dao;
 
 import model.AuthToken;
+import model.Model;
 import model.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,9 +32,10 @@ public class PersonDAOTest extends DAOTest {
         dao.insert(person2);
         dao.insert(person3);
 
-        Person[] people = dao.queryByUser(username);
+        Model[] people = dao.queryByUser(username);
 
         assertNotNull(people);
         assertEquals(2, people.length);
+        assertNotNull( ( (Person) people[0]).getPersonID());
     }
 }

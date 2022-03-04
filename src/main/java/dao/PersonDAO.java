@@ -22,6 +22,7 @@ public class PersonDAO extends DAO{
      */
     public PersonDAO(Connection conn) {
         super(conn);
+        tableName = "person";
     }
 
     /**
@@ -71,10 +72,7 @@ public class PersonDAO extends DAO{
             stmt.setString(1, personID);
             rs = stmt.executeQuery();
             if(rs.next()) {
-                person = new Person(rs.getString("personID"), rs.getString("associatedUsername"),
-                        rs.getString("firstName"), rs.getString("lastName"),
-                        rs.getString("gender"), rs.getString("fatherID"),
-                        rs.getString("motherID"), rs.getString("spouseID"));
+                person = getModelFromResultSet(rs);
                 return person;
             }
             else {
@@ -87,42 +85,17 @@ public class PersonDAO extends DAO{
         }
     }
 
-    public Person[] queryByUser(String username) throws DataAccessException {
-        Person person;
-        ArrayList<Person> people = new ArrayList<>();
-        ResultSet rs;
-
-        String sql = "select * from person where associatedUsername = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            rs = stmt.executeQuery();
-            int i = 0;
-            while(rs.next()) {
-                person = new Person(
-                        rs.getString("personID"),
-                        rs.getString("associatedUsername"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("gender"),
-                        rs.getString("fatherID"),
-                        rs.getString("motherID"),
-                        rs.getString("spouseID") );
-                people.add(person);
-                i++;
-            }
-
-            if(i == 0) {
-                return null;
-            }
-            else {
-                return people.toArray(new Person[0]);
-            }
-        }
-        catch(SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+    protected Person getModelFromResultSet(ResultSet rs) throws SQLException {
+        Person person = new Person(
+                rs.getString("personID"),
+                rs.getString("associatedUsername"),
+                rs.getString("firstName"),
+                rs.getString("lastName"),
+                rs.getString("gender"),
+                rs.getString("fatherID"),
+                rs.getString("motherID"),
+                rs.getString("spouseID") );
+        return person;
     }
 
     /**

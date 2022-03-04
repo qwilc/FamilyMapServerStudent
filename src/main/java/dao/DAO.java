@@ -1,14 +1,20 @@
 package dao;
 
 import model.AuthToken;
+import model.Event;
 import model.Model;
+import model.Person;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public abstract class DAO {
     protected final Connection conn;
+    protected String tableName;
+    protected String primaryKey;
 
     public DAO(Connection conn) {
         this.conn = conn;
@@ -19,6 +25,38 @@ public abstract class DAO {
     public Model query(String identifier) throws DataAccessException {
         return null;
     }
+
+    public Model[] queryByUser(String username) throws DataAccessException { //TODO: This is only needed for Event/PersonDAO
+        Model model;
+        ArrayList<Model> data = new ArrayList<>();
+        ResultSet rs;
+
+        String sql = "select * from " + tableName + " where associatedUsername = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+            int i = 0;
+            while(rs.next()) {
+                model = getModelFromResultSet(rs);
+                data.add(model);
+                i++;
+            }
+
+            if(i == 0) {
+                return null;
+            }
+            else {
+                return data.toArray(new Model[0]);
+            }
+        }
+        catch(SQLException ex) {
+            ex.printStackTrace();
+            throw new DataAccessException();
+        }
+    }
+
+    protected abstract Model getModelFromResultSet(ResultSet rs) throws SQLException;
 
     public void clear(String table) throws DataAccessException {
         String sql = "delete from " + table;

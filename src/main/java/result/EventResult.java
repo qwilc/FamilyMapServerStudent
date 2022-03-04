@@ -1,5 +1,7 @@
 package result;
 
+import model.Event;
+
 /**
  * The EventResult class stores the data for the result body for event requests where an event ID was specified
  */
@@ -68,6 +70,18 @@ public class EventResult extends Result {
         this.city = city;
         this.eventType = eventType;
         this.year = year;
+    }
+
+    public void setDataFromEvent(Event event) {
+        this.associatedUsername = event.getAssociatedUsername();
+        this.eventID = event.getEventID();
+        this.personID = event.getPersonID();
+        this.latitude = event.getLatitude();
+        this.longitude = event.getLongitude();
+        this.country = event.getCountry();
+        this.city = event.getCity();
+        this.eventType = event.getEventType();
+        this.year = event.getYear();
     }
 
     public String getAssociatedUsername() {
@@ -141,4 +155,5 @@ public class EventResult extends Result {
     public void setYear(int year) {
         this.year = year;
     }
+
 }

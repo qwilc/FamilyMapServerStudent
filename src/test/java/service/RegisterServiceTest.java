@@ -11,13 +11,14 @@ import result.LoginRegisterResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RegisterServiceTest {
+public class RegisterServiceTest extends ServiceTest {
     private final RegisterService service = new RegisterService();
 
     @BeforeEach //TODO: I literally just copied this from the login request test
     public void insertUsers() throws DataAccessException {
+        clearService.clear();
+
         Database db = new Database();
-        new ClearService().clear();
 
         User user = new User("username", "password", "email", "firstName", "lastName", "f", "ID");
         new UserDAO(db.getConnection()).insert(user);
@@ -32,7 +33,7 @@ public class RegisterServiceTest {
     }
 
     @Test
-    public void testRegister() {
+    public void testRegister() throws DataAccessException {
         RegisterRequest request = new RegisterRequest();
         request.setFirstName("testName");
         request.setLastName("testSurname");
@@ -46,6 +47,12 @@ public class RegisterServiceTest {
         assertNotNull(result.getAuthtoken());
         assertNotNull(result.getPersonID());
         assertEquals("uniqueUsername", result.getUsername());
+
+        Database db = new Database();
+        UserDAO dao = new UserDAO(db.getConnection());
+        User testUser = dao.query("uniqueUsername");
+        db.closeConnection(false);
+        assertNotNull(testUser);
     }
 
     @Test

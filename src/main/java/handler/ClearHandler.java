@@ -1,14 +1,10 @@
 package handler;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import result.Result;
 import service.ClearService;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
 
 public class ClearHandler extends Handler {
     @Override
@@ -18,7 +14,7 @@ public class ClearHandler extends Handler {
                 ClearService service = new ClearService();
                 Result result = service.clear();
 
-                sendResponseBody(exchange, result);
+                sendResponse(exchange, result);
 
                 success = result.isSuccess();
             }
@@ -30,5 +26,6 @@ public class ClearHandler extends Handler {
         catch(IOException ex) {
             handleIOException(ex, exchange);
         }
+        exchange.getResponseBody().close();
     }
 }

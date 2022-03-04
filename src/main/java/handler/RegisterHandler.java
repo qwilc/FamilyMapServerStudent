@@ -8,8 +8,6 @@ import service.RegisterService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
@@ -22,6 +20,7 @@ public class RegisterHandler extends Handler {
             if (exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
+                requestBody.close();
 
                 logger.info(requestData);
 
@@ -31,10 +30,7 @@ public class RegisterHandler extends Handler {
                 RegisterService service = new RegisterService();
                 LoginRegisterResult result = service.register(request);
 
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
-                gson.toJson(result, responseBody);
-                responseBody.close();
+                sendResponse(exchange, result);
 
                 success = result.isSuccess();
             }
@@ -47,5 +43,6 @@ public class RegisterHandler extends Handler {
         catch (IOException ex) {
             handleIOException(ex, exchange);
         }
+        exchange.getResponseBody().close();
     }
 }

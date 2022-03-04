@@ -46,6 +46,7 @@ public class FillService {
                 result.setMessage("Successfully added " + numPeople + " persons and " + numEvents + " events to the database.");
                 result.setSuccess(true);
             }
+            database.closeConnection(true);
         }
         catch (SQLException | DataAccessException ex) {
             result.setMessage("Error: Fill was unsuccessful");

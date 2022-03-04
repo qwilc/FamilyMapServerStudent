@@ -1,5 +1,7 @@
 package result;
 
+import model.Person;
+
 /**
  * The PersonResult class stores the data for the result body for a person request where an ID was specified
  */
@@ -62,6 +64,17 @@ public class PersonResult extends Result {
         this.fatherID = fatherID;
         this.motherID = motherID;
         this.spouseID = spouseID;
+    }
+
+    public void setDataFromPerson(Person person) {
+        personID = person.getPersonID();
+        associatedUsername = person.getAssociatedUsername();
+        firstName = person.getFirstName();
+        lastName = person.getLastName();
+        gender = person.getGender();
+        fatherID = person.getFatherID();
+        motherID = person.getMotherID();
+        spouseID = person.getSpouseID();
     }
 
     public String getAssociatedUsername() {

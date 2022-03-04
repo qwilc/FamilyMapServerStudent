@@ -1,8 +1,6 @@
 package handler;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import request.LoadRequest;
 import result.Result;
@@ -10,8 +8,6 @@ import service.LoadService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
@@ -24,8 +20,9 @@ public class LoadHandler extends Handler {
             if(exchange.getRequestMethod().toLowerCase().equals("post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
+                requestBody.close();
 
-                logger.info(requestData);
+                logger.fine(requestData);
 
                 Gson gson = new Gson();
                 LoadRequest request = gson.fromJson(requestData, LoadRequest.class);
@@ -33,7 +30,9 @@ public class LoadHandler extends Handler {
                 LoadService service = new LoadService();
                 Result result = service.load(request);
 
-                sendResponseBody(exchange, result);
+                sendResponse(exchange, result);
+
+                logger.info(result.getMessage());
 
                 success = result.isSuccess();
             }
@@ -45,5 +44,7 @@ public class LoadHandler extends Handler {
         catch (IOException ex) {
             handleIOException(ex, exchange);
         }
+        logger.info("Rcode: " + exchange.getResponseCode());
+        exchange.getResponseBody().close();
     }
 }

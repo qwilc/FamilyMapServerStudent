@@ -11,7 +11,7 @@ import java.sql.SQLException;
 /**
  * The UserDAO class handles connecting to the database in order to query or modify the user table
  */
-public class UserDAO extends DAO{
+public class UserDAO extends DAO {
 
     /**
      * Creates a UserDAO object
@@ -20,6 +20,7 @@ public class UserDAO extends DAO{
      */
     public UserDAO(Connection conn) {
         super(conn);
+        tableName = "user";
     }
 
     /**
@@ -56,6 +57,7 @@ public class UserDAO extends DAO{
      * @return a User object representing the user
      * @throws DataAccessException if an SQLException is caught
      */
+    @Override
     public User query(String username) throws DataAccessException {
         User user;
         ResultSet rs;
@@ -66,10 +68,7 @@ public class UserDAO extends DAO{
             stmt.setString(1, username);
             rs = stmt.executeQuery();
             if(rs.next()) {
-                user = new User(rs.getString("username"), rs.getString("password"),
-                        rs.getString("email"), rs.getString("firstName"),
-                        rs.getString("lastName"), rs.getString("gender"),
-                        rs.getString("personID"));
+                user = (User) getModelFromResultSet(rs);
                 return user;
             }
             else {
@@ -80,6 +79,17 @@ public class UserDAO extends DAO{
             ex.printStackTrace();
             throw new DataAccessException();
         }
+    }
+
+    @Override
+    protected Model getModelFromResultSet(ResultSet rs) throws SQLException {
+        return new User(rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("email"),
+                rs.getString("firstName"),
+                rs.getString("lastName"),
+                rs.getString("gender"),
+                rs.getString("personID") );
     }
 
     /**

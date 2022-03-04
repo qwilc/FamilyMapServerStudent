@@ -4,6 +4,7 @@ import dao.AuthTokenDAO;
 import dao.DataAccessException;
 import dao.Database;
 import dao.PersonDAO;
+import model.Model;
 import model.Person;
 import result.AllPeopleResult;
 
@@ -26,9 +27,16 @@ public class AllPeopleService {
 
         try(Connection conn = database.getConnection()) {
             AuthTokenDAO authTokenDAO = new AuthTokenDAO(conn);
+
             if(authTokenDAO.isValidAuthToken(authtoken, username)) {
                 PersonDAO personDAO = new PersonDAO(conn);
-                Person[] people = personDAO.queryByUser(username);
+                Model[] array = personDAO.queryByUser(username);
+                Person[] people = new Person[array.length];
+
+                for(int i = 0; i < array.length; i++) {
+                    people[i] = (Person) array[i];
+                }
+
                 result.setData(people);
                 result.setSuccess(true);
             }
@@ -36,7 +44,9 @@ public class AllPeopleService {
                 result.setMessage("Error: Invalid authtoken");
                 result.setSuccess(false);
             }
-        } catch (SQLException | DataAccessException ex) {
+            database.closeConnection(true);
+        }
+        catch (SQLException | DataAccessException ex) {
             result.setMessage("Error: Could not get all people associated with user");
             result.setSuccess(false);
             ex.printStackTrace();

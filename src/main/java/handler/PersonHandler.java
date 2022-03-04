@@ -27,7 +27,7 @@ public class PersonHandler extends Handler {
                     result = service.people(authToken, username);
                 }
 
-                sendResponseBody(exchange, result);
+                sendResponse(exchange, result);
 
                 success = result.isSuccess();
             }
@@ -39,5 +39,6 @@ public class PersonHandler extends Handler {
         catch (IOException ex) {
             handleIOException(ex, exchange);
         }
+        exchange.getResponseBody().close();
     }
 }

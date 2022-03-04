@@ -17,6 +17,7 @@ public class AuthTokenDAO extends DAO {
 
     public AuthTokenDAO(Connection conn) {
         super(conn);
+        tableName = "authtoken";
     }
 
     /**
@@ -70,6 +71,12 @@ public class AuthTokenDAO extends DAO {
             ex.printStackTrace();
             throw new DataAccessException();
         }
+    }
+
+    @Override
+    protected Model getModelFromResultSet(ResultSet rs) throws SQLException {
+        return new AuthToken(rs.getString("authtoken"),
+                rs.getString("username") );
     }
 
     public boolean isValidAuthToken(String authToken, String username) throws DataAccessException {

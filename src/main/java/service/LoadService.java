@@ -7,7 +7,6 @@ import model.User;
 import request.LoadRequest;
 import result.Result;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -27,7 +26,7 @@ public class LoadService {
 
         try(Connection conn = database.openConnection()) {
             User[] users = request.getUsers();
-            Person[] people = request.getPeople();
+            Person[] people = request.getPersons();
             Event[] events = request.getEvents();
 
             UserDAO userDAO = new UserDAO(conn);
@@ -48,6 +47,8 @@ public class LoadService {
             result.setMessage("Successfully added " + users.length + " users, "
                     + people.length + " persons, and " + events.length + " events to the database.");
             result.setSuccess(true);
+
+            database.closeConnection(true);
         }
         catch (SQLException | DataAccessException ex) {
             result.setMessage("Error: Load request unsuccessful");

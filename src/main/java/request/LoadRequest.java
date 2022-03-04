@@ -15,7 +15,7 @@ public class LoadRequest {
     /**
      * The people to load
      */
-    private Person[] people;
+    private Person[] persons;
     /**
      * The events to load
      */
@@ -29,12 +29,12 @@ public class LoadRequest {
         this.users = users;
     }
 
-    public Person[] getPeople() {
-        return people;
+    public Person[] getPersons() {
+        return persons;
     }
 
-    public void setPeople(Person[] people) {
-        this.people = people;
+    public void setPersons(Person[] persons) {
+        this.persons = persons;
     }
 
     public Event[] getEvents() {

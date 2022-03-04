@@ -4,6 +4,7 @@ import dao.DataAccessException;
 import dao.Database;
 import dao.UserDAO;
 import model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import request.LoginRequest;
@@ -16,6 +17,8 @@ public class LoginServiceTest extends ServiceTest {
 
     @BeforeEach
     public void insertUsers() throws DataAccessException {
+        clearService.clear();
+
         Database db = new Database();
 
         User user = new User("username", "password", "email", "firstName", "lastName", "f", "ID");
@@ -28,6 +31,11 @@ public class LoginServiceTest extends ServiceTest {
         new UserDAO(db.getConnection()).insert(user2);
 
         db.closeConnection(true);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        clearService.clear();
     }
 
     @Test
@@ -89,5 +97,23 @@ public class LoginServiceTest extends ServiceTest {
         assertNull(result.getPersonID());
         assertNull(result.getAuthtoken());
 
+    }
+
+    @Test
+    public void testLoginEmptyDatabase() {
+        clearService.clear();
+
+        LoginRequest request = new LoginRequest();
+        request.setUsername("username");
+        request.setPassword("12345");
+
+        LoginRegisterResult result = service.login(request);
+
+        assertNotNull(result);
+        assertEquals("Error: Invalid username", result.getMessage());
+        assertFalse(result.isSuccess());
+        assertNull(result.getUsername());
+        assertNull(result.getPersonID());
+        assertNull(result.getAuthtoken());
     }
 }
