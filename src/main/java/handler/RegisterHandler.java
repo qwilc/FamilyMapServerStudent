@@ -7,20 +7,16 @@ import result.LoginRegisterResult;
 import service.RegisterService;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
 public class RegisterHandler extends Handler {
-    private Logger logger = Logger.getLogger("RegisterHandler");
+    private final Logger logger = Logger.getLogger("RegisterHandler");
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
             if (hasCorrectRequestMethod(exchange, "post")) {
-                InputStream requestBody = exchange.getRequestBody();
-                String requestData = readString(requestBody);
-                requestBody.close();
+                String requestData = getRequestData(exchange);
 
                 logger.info(requestData);
 

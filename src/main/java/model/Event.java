@@ -159,15 +159,6 @@ public class Event extends Model {
 
     @Override
     public boolean equals(Object o) {
-//        Event event = (Event) o;
-//        return year == event.year
-//                && Objects.equals(eventID, event.eventID)
-//                && Objects.equals(associatedUsername, event.associatedUsername)
-//                && Objects.equals(personID, event.personID)
-//                && Objects.equals(country, event.country)
-//                && Objects.equals(city, event.city)
-//                && Objects.equals(eventType, event.eventType);
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;

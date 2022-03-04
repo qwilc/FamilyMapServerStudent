@@ -7,8 +7,6 @@ import result.Result;
 import service.LoadService;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
 public class LoadHandler extends Handler {
@@ -18,9 +16,7 @@ public class LoadHandler extends Handler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
             if(hasCorrectRequestMethod(exchange, "post")) {
-                InputStream requestBody = exchange.getRequestBody();
-                String requestData = readString(requestBody);
-                requestBody.close();
+                String requestData = getRequestData(exchange);
 
                 logger.fine(requestData);
 

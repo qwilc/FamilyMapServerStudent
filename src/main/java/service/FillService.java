@@ -3,7 +3,6 @@ package service;
 import dao.DataAccessException;
 import dao.Database;
 import dao.UserDAO;
-import model.Person;
 import model.User;
 import result.Result;
 import treeGenerator.TreeGenerator;
@@ -55,14 +54,5 @@ public class FillService {
         }
 
         return result;
-    }
-
-    /**
-     * Generates the default of four generations for the user indicated by the given username
-     * @param username the username
-     * @return a Result object indicating the outcome of the request
-     */
-    public Result fill(String username) {
-        return fill(username,4);
     }
 }

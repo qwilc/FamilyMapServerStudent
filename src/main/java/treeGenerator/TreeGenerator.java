@@ -1,6 +1,5 @@
 package treeGenerator;
 
-import com.google.gson.Gson;
 import dao.DataAccessException;
 import dao.EventDAO;
 import dao.PersonDAO;
@@ -19,13 +18,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TreeGenerator {
-    private User user;
+    private final User user;
     private int numPeopleAdded = 0;
     private int numEventsAdded = 0;
     private final Connection conn;
     private final String associatedUsername;
     private final Logger logger = Logger.getLogger("TreeGenerator");
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public TreeGenerator(Connection conn, User user) {
         this.conn = conn;
@@ -110,7 +109,7 @@ public class TreeGenerator {
         Person person = new Person(associatedUsername, null, null, gender, null, null, null);
         setRandomName(person);
 
-        generateBirthEvent(person.getPersonID(), childBirthYear, gender);
+        generateBirthEvent(person.getPersonID(), childBirthYear);
         generateDeathEvent(person.getPersonID());
 
         return person;
@@ -135,7 +134,7 @@ public class TreeGenerator {
         addEventToDatabase(birth);
     }
 
-    private void generateBirthEvent(String personID, int childBirthYear, String gender) {
+    private void generateBirthEvent(String personID, int childBirthYear) {
         int birthYear = childBirthYear - 30;
         Event birth = new Event(associatedUsername, personID, 0, 0, null, null, "birth", birthYear);
         setRandomLocation(birth);
@@ -170,8 +169,7 @@ public class TreeGenerator {
     }
 
     private Location selectLocation() {
-        Location[] possibleLocations = null;
-        possibleLocations = DataReader.getLocations().getData();
+        Location[] possibleLocations = DataReader.getLocations().getData();
 
         assert possibleLocations != null;
         int index = random.nextInt(possibleLocations.length);
@@ -199,8 +197,7 @@ public class TreeGenerator {
     }
 
     private String selectLastName() {
-        String[] possibleNames = null;
-        possibleNames = DataReader.getSurnames().getData();
+        String[] possibleNames = DataReader.getSurnames().getData();
 
         assert possibleNames != null;
         int index = random.nextInt(possibleNames.length);

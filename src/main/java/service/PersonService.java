@@ -1,13 +1,9 @@
 package service;
 
 import dao.*;
-import model.AuthToken;
-import model.Person;
 import result.PersonResult;
-import result.Result;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * The PersonService class performs the functionality for person requests with a specified ID

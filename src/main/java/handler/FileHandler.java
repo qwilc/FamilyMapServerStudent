@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FileHandler extends Handler {
-    private static Logger logger = Logger.getLogger("FileHandler");
+    private static final Logger logger = Logger.getLogger("FileHandler");
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

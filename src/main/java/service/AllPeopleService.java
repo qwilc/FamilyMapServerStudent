@@ -20,40 +20,6 @@ public class AllPeopleService extends GetDataService {
      */
     public AllPeopleResult people(String authtoken) {
         return (AllPeopleResult) super.getData(authtoken, null);
-//        Database database = new Database();
-//        AllPeopleResult result = new AllPeopleResult(null, false, null);
-//
-//        try(Connection conn = database.getConnection()) {
-//            AuthTokenDAO authTokenDAO = new AuthTokenDAO(conn);
-//
-//            AuthToken token = authTokenDAO.query(authtoken);
-//
-//            if(token != null) {
-//                String username = token.getUsername();
-//                PersonDAO personDAO = new PersonDAO(conn);
-//                Model[] array = personDAO.queryByUser(username);
-//                database.closeConnection(true);
-//
-//                Person[] people = new Person[array.length];
-//                for(int i = 0; i < array.length; i++) {
-//                    people[i] = (Person) array[i];
-//                }
-//
-//                result.setData(people);
-//                result.setSuccess(true);
-//            }
-//            else {
-//                result.setMessage("Error: Invalid authtoken");
-//                result.setSuccess(false);
-//            }
-//        }
-//        catch (SQLException | DataAccessException ex) {
-//            result.setMessage("Error: Could not get all people associated with user");
-//            result.setSuccess(false);
-//            ex.printStackTrace();
-//        }
-//
-//        return result;
     }
 
     @Override

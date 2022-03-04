@@ -3,7 +3,6 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Database {
     private Connection conn;
@@ -60,17 +59,6 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Unable to close database connection");
-        }
-    }
-
-    public void clearTables() throws DataAccessException
-    {
-
-        try (Statement stmt = conn.createStatement()){
-            String sql = "DELETE FROM Events";
-            stmt.executeUpdate(sql);
-        } catch (SQLException e) {
-            throw new DataAccessException("SQL Error encountered while clearing tables");
         }
     }
 }

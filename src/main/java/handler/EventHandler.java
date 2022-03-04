@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import logging.Logging;
 
 public class EventHandler extends Handler {
-    Logger logger = Logger.getLogger("EventHandler");
+    private final Logger logger = Logger.getLogger("EventHandler");
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         Logging.initializeLogger(logger, Level.FINER);

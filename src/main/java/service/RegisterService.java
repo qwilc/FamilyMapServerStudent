@@ -2,7 +2,6 @@ package service;
 
 import dao.*;
 import model.AuthToken;
-import model.Person;
 import model.User;
 import request.RegisterRequest;
 import result.LoginRegisterResult;

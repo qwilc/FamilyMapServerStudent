@@ -8,7 +8,6 @@ import model.AuthToken;
 import model.User;
 import request.LoginRequest;
 import result.LoginRegisterResult;
-import result.Result;
 
 import java.sql.Connection;
 import java.sql.SQLException;

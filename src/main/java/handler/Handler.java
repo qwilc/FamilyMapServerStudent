@@ -28,7 +28,9 @@ public abstract class Handler implements HttpHandler {
 
     protected String getRequestData(HttpExchange exchange) throws IOException {
         try(InputStream requestBody = exchange.getRequestBody()) {
-            return readString(requestBody);
+            String requestData = readString(requestBody);
+            requestBody.close();
+            return requestData;
         }
     }
 

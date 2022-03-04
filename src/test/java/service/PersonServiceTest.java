@@ -11,22 +11,15 @@ import result.PersonResult;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonServiceTest extends ServiceTest {
-    private Database db;
-    private PersonService service = new PersonService();
+    private final PersonService service = new PersonService();
     private final String username = "username";
     private final String authTokenString = "token";
-    private String testID = "ID1";
-//
-//    @BeforeEach
-//    @Override
-//    public void setUp() {
-//        super.setUp();
-//    }
+    private final String testID = "ID1";
 
     @BeforeEach
     public void insertUser() throws DataAccessException {
         clearService.clear();
-        db = new Database();
+        Database db = new Database();
 
         User user = new User(username, "password", "email", "firstName", "lastName", "f", "ID");
         new UserDAO(db.getConnection()).insert(user);
@@ -46,7 +39,7 @@ public class PersonServiceTest extends ServiceTest {
     }
 
     @Test
-    public void testPersonRequestPass() throws DataAccessException {
+    public void testPersonRequestPass() {
         PersonResult result = service.person(authTokenString, testID);
 
         assertNotNull(result);
@@ -57,7 +50,7 @@ public class PersonServiceTest extends ServiceTest {
     }
 
     @Test
-    public void testPersonRequestInvalidAuthToken() throws DataAccessException {
+    public void testPersonRequestInvalidAuthToken() {
         PersonResult result = service.person("invalid authtoken", testID);
 
         assertNotNull(result);
@@ -66,7 +59,7 @@ public class PersonServiceTest extends ServiceTest {
     }
 
     @Test
-    public void testPersonRequestInvalidID() throws DataAccessException {
+    public void testPersonRequestInvalidID() {
         PersonResult result = service.person(authTokenString, "invalid ID");
 
         assertNotNull(result);
@@ -75,7 +68,7 @@ public class PersonServiceTest extends ServiceTest {
     }
 
     @Test
-    public void testPersonRequestInvalidUsername() throws DataAccessException {
+    public void testPersonRequestInvalidUsername() {
         PersonResult result = service.person(authTokenString, "ID3");
 
         assertNotNull(result);

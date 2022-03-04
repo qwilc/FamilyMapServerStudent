@@ -1,12 +1,9 @@
 package service;
 
 import dao.*;
-import model.AuthToken;
-import model.Event;
 import result.EventResult;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * The EventService class performs the functionality for event requests with a specified ID

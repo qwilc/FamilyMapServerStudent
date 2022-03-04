@@ -3,15 +3,13 @@ package helperData;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
 import java.util.logging.Logger;
 
 public class DataReader {
-    private static Names femaleNames;
-    private static Names maleNames;
-    private static Names surnames;
-    private static Locations locations;
+    private static final Names femaleNames;
+    private static final Names maleNames;
+    private static final Names surnames;
+    private static final Locations locations;
     private static final Logger logger = Logger.getLogger("DataReader");
 
     static {
@@ -25,7 +23,7 @@ public class DataReader {
     private static String readFile(String pathName) {
         File file = new File(pathName);
 
-        try(FileReader fileReader = new FileReader(file);) {
+        try(FileReader fileReader = new FileReader(file)) {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -53,31 +51,15 @@ public class DataReader {
         return femaleNames;
     }
 
-    public static void setFemaleNames(Names femaleNames) {
-        DataReader.femaleNames = femaleNames;
-    }
-
     public static Names getMaleNames() {
         return maleNames;
-    }
-
-    public static void setMaleNames(Names maleNames) {
-        DataReader.maleNames = maleNames;
     }
 
     public static Names getSurnames() {
         return surnames;
     }
 
-    public static void setSurnames(Names surnames) {
-        DataReader.surnames = surnames;
-    }
-
     public static Locations getLocations() {
         return locations;
-    }
-
-    public static void setLocations(Locations locations) {
-        DataReader.locations = locations;
     }
 }

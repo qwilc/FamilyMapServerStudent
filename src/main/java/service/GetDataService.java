@@ -29,7 +29,7 @@ public abstract class GetDataService {
                     result.setSuccess(true);
                 }
                 else {
-                    Model model = getSpecificData(conn, username, ID);
+                    Model model = getSpecificData(conn, ID);
 
                     if(model == null) {
                         result.setMessage("Error: Invalid ID");
@@ -66,7 +66,7 @@ public abstract class GetDataService {
         return dao.queryByUser(username);
     }
 
-    protected Model getSpecificData(Connection conn, String username, String ID) throws DataAccessException {
+    protected Model getSpecificData(Connection conn, String ID) throws DataAccessException {
         DAO dao = initializeDAO(conn);
         return dao.query(ID);
     }

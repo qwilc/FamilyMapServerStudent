@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Objects;
-
 /**
  * The User class stores the data for a row of the user table in the database.
  * Contains fields for username, password, email, firstName, lastName, gender, and personID, as well as the corresponding getters and setters

@@ -16,9 +16,7 @@ public class LoginHandler extends Handler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
             if (hasCorrectRequestMethod(exchange, "post")) {
-                InputStream requestBody = exchange.getRequestBody();
-                String requestData = readString(requestBody);
-                requestBody.close();
+                String requestData = getRequestData(exchange);
 
                 logger.info(requestData);
 
