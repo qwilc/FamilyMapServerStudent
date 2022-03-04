@@ -1,6 +1,5 @@
 package dao;
 
-import model.Event;
 import model.Model;
 import model.Person;
 
@@ -8,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  * The PersonDAO class handles connecting to the database in order to query or modify the person table
@@ -23,6 +21,7 @@ public class PersonDAO extends DAO{
     public PersonDAO(Connection conn) {
         super(conn);
         tableName = "person";
+        primaryKey = "personID";
     }
 
     /**
@@ -63,30 +62,11 @@ public class PersonDAO extends DAO{
      * @throws DataAccessException if an SQLException is caught
      */
     public Person query(String personID) throws DataAccessException {
-        Person person;
-        ResultSet rs;
-
-        String sql = "select * from person where personID = ?";
-
-        try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, personID);
-            rs = stmt.executeQuery();
-            if(rs.next()) {
-                person = getModelFromResultSet(rs);
-                return person;
-            }
-            else {
-                return null;
-            }
-        }
-        catch(SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+        return (Person) super.query(personID);
     }
 
     protected Person getModelFromResultSet(ResultSet rs) throws SQLException {
-        Person person = new Person(
+        return new Person(
                 rs.getString("personID"),
                 rs.getString("associatedUsername"),
                 rs.getString("firstName"),
@@ -95,26 +75,7 @@ public class PersonDAO extends DAO{
                 rs.getString("fatherID"),
                 rs.getString("motherID"),
                 rs.getString("spouseID") );
-        return person;
     }
-
-    /**
-     * Updates the person with the specified person ID
-     *
-     * @param person the Person object with the new data
-     * @throws DataAccessException if an SQLException is caught
-     */
-    public void update(Person person) throws DataAccessException {}
-
-    /**
-     * Deletes the person with the specified ID
-     *
-     * @param personID the ID
-     * @throws DataAccessException if an SQLException is caught
-     */
-    public void delete(String personID) throws DataAccessException {}
-
-    public void deleteUserPeople() throws DataAccessException {}
 
     /**
      * Clears all rows of the person table in the database

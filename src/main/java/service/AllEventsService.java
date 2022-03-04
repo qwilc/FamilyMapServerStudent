@@ -1,9 +1,11 @@
 package service;
 
 import dao.*;
+import model.AuthToken;
 import model.Event;
 import model.Model;
 import result.AllEventsResult;
+import result.Result;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,21 +13,24 @@ import java.sql.SQLException;
 /**
  * The AllEventsService class performs the functionality for event requests without a specified ID
  */
-public class AllEventsService {
+public class AllEventsService extends GetDataService {
     /**
      * Finds and returns data for all the events associated with the user indicated by the authentication token
      *
      * @param authtoken the authentication token
      * @return an AllEventsResult object with the outcome of the request
      */
-    public AllEventsResult events(String authtoken, String username) {
+    public AllEventsResult events(String authtoken) {
         Database database = new Database();
         AllEventsResult result = new AllEventsResult(null, false, null);
 
         try(Connection conn = database.getConnection()) {
             AuthTokenDAO authTokenDAO = new AuthTokenDAO(conn);
+            AuthToken token = authTokenDAO.query(authtoken);
 
-            if(authTokenDAO.isValidAuthToken(authtoken, username)) {
+            if(token != null) {
+                String username = token.getUsername();
+
                 EventDAO eventDAO = new EventDAO(conn);
 
                 Model[] array = eventDAO.queryByUser(username);
@@ -50,5 +55,20 @@ public class AllEventsService {
         }
 
         return result;
+    }
+
+    @Override
+    protected void initializeResult() {
+
+    }
+
+    @Override
+    protected DAO initializeDAO(Connection conn) {
+        return null;
+    }
+
+    @Override
+    protected void setResultData(Model[] array, Result result) {
+
     }
 }

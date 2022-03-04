@@ -7,17 +7,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
 /**
  * The AuthTokenDAO class handles connecting to the database in order to query or modify the authtoken table
  */
 public class AuthTokenDAO extends DAO {
-    private static Logger logger = Logger.getLogger("AuthTokenDAO");
-
     public AuthTokenDAO(Connection conn) {
         super(conn);
         tableName = "authtoken";
+        primaryKey = "authToken";
     }
 
     /**
@@ -51,26 +49,7 @@ public class AuthTokenDAO extends DAO {
      */
     @Override
     public AuthToken query(String authToken) throws DataAccessException {
-        AuthToken authTokenObject;
-        ResultSet rs;
-
-        String sql = "select * from authtoken where authtoken = ?;";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, authToken);
-            rs = stmt.executeQuery();
-            if (rs.next()) {
-                authTokenObject = new AuthToken(rs.getString("authtoken"), rs.getString("username"));
-                return authTokenObject;
-            }
-            else {
-                return null;
-            }
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+        return (AuthToken) super.query(authToken);
     }
 
     @Override
@@ -78,31 +57,6 @@ public class AuthTokenDAO extends DAO {
         return new AuthToken(rs.getString("authtoken"),
                 rs.getString("username") );
     }
-
-    public boolean isValidAuthToken(String authToken, String username) throws DataAccessException {
-        ResultSet rs;
-
-        String sql = "select * from authtoken where authtoken = ? and username = ?;";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, authToken);
-            stmt.setString(2, username);
-            rs = stmt.executeQuery();
-            return rs.next();
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
-    }
-
-    /**
-     * Deletes the specified authentication token
-     *
-     * @param authToken the authentication token
-     * @throws DataAccessException if an SQLException is caught
-     */
-    public void delete(String authToken) throws DataAccessException {}
 
     /**
      * Clears all rows of the authtoken table in the database

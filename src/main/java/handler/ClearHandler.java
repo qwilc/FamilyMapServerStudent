@@ -10,7 +10,7 @@ public class ClearHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("post")) {
+            if(hasCorrectRequestMethod(exchange, "post")) {
                 ClearService service = new ClearService();
                 Result result = service.clear();
 

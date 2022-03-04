@@ -8,9 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import result.AllPeopleResult;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AllPeopleServiceTest extends ServiceTest {
@@ -45,7 +42,7 @@ public class AllPeopleServiceTest extends ServiceTest {
 
         db.closeConnection(true);
 
-        AllPeopleResult result = service.people(authTokenString, username);
+        AllPeopleResult result = service.people(authTokenString);
 
         assertNotNull(result);
         assertNull(result.getMessage());

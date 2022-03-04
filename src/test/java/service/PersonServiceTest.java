@@ -6,7 +6,6 @@ import model.Person;
 import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import result.AllPeopleResult;
 import result.PersonResult;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +47,7 @@ public class PersonServiceTest extends ServiceTest {
 
     @Test
     public void testPersonRequestPass() throws DataAccessException {
-        PersonResult result = service.person(authTokenString, username, testID);
+        PersonResult result = service.person(authTokenString, testID);
 
         assertNotNull(result);
         assertNull(result.getMessage());
@@ -59,7 +58,7 @@ public class PersonServiceTest extends ServiceTest {
 
     @Test
     public void testPersonRequestInvalidAuthToken() throws DataAccessException {
-        PersonResult result = service.person("invalid authtoken", username, testID);
+        PersonResult result = service.person("invalid authtoken", testID);
 
         assertNotNull(result);
         assertEquals("Error: Invalid authtoken", result.getMessage());
@@ -68,7 +67,7 @@ public class PersonServiceTest extends ServiceTest {
 
     @Test
     public void testPersonRequestInvalidID() throws DataAccessException {
-        PersonResult result = service.person(authTokenString, username, "invalid ID");
+        PersonResult result = service.person(authTokenString, "invalid ID");
 
         assertNotNull(result);
         assertEquals("Error: Invalid person ID", result.getMessage());
@@ -77,7 +76,7 @@ public class PersonServiceTest extends ServiceTest {
 
     @Test
     public void testPersonRequestInvalidUsername() throws DataAccessException {
-        PersonResult result = service.person(authTokenString, username, "ID3");
+        PersonResult result = service.person(authTokenString, "ID3");
 
         assertNotNull(result);
         assertEquals("Error: This person is not associated with this user", result.getMessage());

@@ -4,6 +4,7 @@ import dao.AuthTokenDAO;
 import dao.DataAccessException;
 import dao.Database;
 import dao.PersonDAO;
+import model.AuthToken;
 import model.Person;
 import result.PersonResult;
 
@@ -21,14 +22,17 @@ public class PersonService {
      * @param personID the person ID
      * @return a PersonResult object with the outcome of the person request
      */
-    public PersonResult person(String authtoken, String username, String personID) {
+    public PersonResult person(String authtoken, String personID) {
         Database database = new Database();
         PersonResult result = new PersonResult(null, false, null, null, null, null, null, null, null, null);
 
         try(Connection conn = database.getConnection()) {
             AuthTokenDAO authTokenDAO = new AuthTokenDAO(conn);
+            AuthToken token = (AuthToken) authTokenDAO.query(authtoken);
 
-            if(authTokenDAO.isValidAuthToken(authtoken, username)) {
+            if(token != null) {
+                String username = token.getUsername();
+
                 PersonDAO dao = new PersonDAO(conn);
                 Person person = dao.query(personID);
 

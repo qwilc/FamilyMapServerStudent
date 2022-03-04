@@ -1,6 +1,7 @@
 package handler;
 
 import com.sun.net.httpserver.HttpExchange;
+import logging.Logging;
 import result.Result;
 import service.FillService;
 
@@ -14,15 +15,10 @@ public class FillHandler extends Handler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Level level = Level.FINE;
-        logger.setLevel(level);
-        logger.setUseParentHandlers(false);
-        java.util.logging.Handler handler = new ConsoleHandler();
-        handler.setLevel(level);
-        logger.addHandler(handler);
+        Logging.initializeLogger(logger, Level.FINER);
 
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("post")) {
+            if(hasCorrectRequestMethod(exchange, "post")) {
                 String[] splitPath = getSplitPath(exchange);
 
                 FillService service = new FillService();

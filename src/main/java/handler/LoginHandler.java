@@ -15,7 +15,7 @@ public class LoginHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            if (exchange.getRequestMethod().toLowerCase().equals("post")) {
+            if (hasCorrectRequestMethod(exchange, "post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
                 requestBody.close();
@@ -31,13 +31,7 @@ public class LoginHandler extends Handler {
                 success = result.isSuccess();
                 logger.info(result.getMessage());
 
-                if(success) {
-                    sendResponse(exchange, result);
-                }
-            }
-
-            if (!success) {
-                sendBadRequestResponse(exchange);
+                sendResponse(exchange, result);
             }
         }
         catch(IOException ex) {

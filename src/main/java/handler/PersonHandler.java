@@ -11,20 +11,19 @@ public class PersonHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("get")) {
+            if(hasCorrectRequestMethod(exchange, "get")) {
                 String[] splitPath = getSplitPath(exchange);
                 String authToken = getAuthToken(exchange);
-                String username = splitPath[2];
 
                 Result result;
-                if(splitPath.length > 3) {
-                    String personID = splitPath[3];
+                if(splitPath.length > 2) {
+                    String personID = splitPath[2];
                     PersonService service = new PersonService();
-                    result = service.person(authToken, username, personID);
+                    result = service.person(authToken, personID);
                 }
                 else {
                     AllPeopleService service = new AllPeopleService();
-                    result = service.people(authToken, username);
+                    result = service.people(authToken);
                 }
 
                 sendResponse(exchange, result);

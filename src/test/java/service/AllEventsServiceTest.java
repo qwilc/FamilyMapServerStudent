@@ -45,7 +45,7 @@ public class AllEventsServiceTest extends ServiceTest{
 
         db.closeConnection(true);
 
-        AllEventsResult result = service.events(authTokenString, username);
+        AllEventsResult result = service.events(authTokenString);
 
         assertNotNull(result);
         assertNull(result.getMessage());

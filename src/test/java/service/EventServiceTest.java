@@ -45,7 +45,7 @@ public class EventServiceTest extends ServiceTest {
         eventDAO.insert(testEvent);
         db.closeConnection(true);
 
-        EventResult result = service.event(authToken, username, eventID);
+        EventResult result = service.event(authToken, eventID);
 
         assertNotNull(result);
         assertNull(result.getMessage());

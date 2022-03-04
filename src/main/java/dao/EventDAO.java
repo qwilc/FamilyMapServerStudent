@@ -21,6 +21,7 @@ public class EventDAO extends DAO{
     public EventDAO(Connection conn) {
         super(conn);
         tableName = "event";
+        primaryKey = "eventID";
     }
 
     /**
@@ -61,26 +62,7 @@ public class EventDAO extends DAO{
      * @throws DataAccessException if an SQLException is caught
      */
     public Event query(String eventID) throws DataAccessException {
-        Event event;
-        ResultSet rs;
-
-        String sql = "select * from event where eventID = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, eventID);
-            rs = stmt.executeQuery();
-            if(rs.next()) {
-                event = getModelFromResultSet(rs);
-                return event;
-            }
-            else {
-                return null;
-            }
-        }
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+        return (Event) super.query(eventID);
     }
 
     public Event[] queryByPerson(String personID) throws DataAccessException {
@@ -156,16 +138,6 @@ public class EventDAO extends DAO{
                 rs.getString("eventType"),
                 rs.getInt("year"));
     }
-
-    /**
-     * Deletes the event with the specified ID
-     *
-     * @param eventID the ID
-     * @throws DataAccessException if an SQLException is caught
-     */
-    public void delete(String eventID) throws DataAccessException {}
-
-    public void deleteUserEvents() throws DataAccessException {}
 
     /**
      * Clears all rows of the event table in the database

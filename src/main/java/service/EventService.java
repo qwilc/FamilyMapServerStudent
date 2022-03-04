@@ -1,6 +1,7 @@
 package service;
 
 import dao.*;
+import model.AuthToken;
 import model.Event;
 import result.EventResult;
 
@@ -18,14 +19,17 @@ public class EventService {
      * @param eventID the event identification
      * @return an EventResult with the outcome of the request
      */
-    public EventResult event(String authtoken, String username, String eventID) {
+    public EventResult event(String authtoken, String eventID) {
         Database database = new Database();
         EventResult result = new EventResult(null, false, null, null, null, 0, 0, null, null, null, 0);
 
         try(Connection conn = database.getConnection()) {
             AuthTokenDAO authTokenDAO = new AuthTokenDAO(conn);
 
-            if(authTokenDAO.isValidAuthToken(authtoken, username)) {
+            AuthToken token = authTokenDAO.query(authtoken);
+
+            if(token != null) {
+                String username = token.getUsername();
                 EventDAO dao = new EventDAO(conn);
                 Event event = dao.query(eventID);
 

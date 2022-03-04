@@ -1,12 +1,14 @@
 package handler;
 
 import com.sun.net.httpserver.HttpExchange;
+import logging.Logging;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.file.Files;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FileHandler extends Handler {
@@ -14,10 +16,10 @@ public class FileHandler extends Handler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        Logging.initializeLogger(logger, Level.FINE);
+        logger.fine("Handling file request");
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("get")) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
+            if(hasCorrectRequestMethod(exchange, "get")) {
                 String urlPath = exchange.getRequestURI().toString();
 
                 if(urlPath == null || urlPath.equals("/")) { //TODO: Could have FilePath(urlPath) method
@@ -32,31 +34,33 @@ public class FileHandler extends Handler {
 
                 if(file.exists()) {
                     exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-
-                    OutputStream responseBody = exchange.getResponseBody(); //TODO: Could have WriteToOutputStream(exchange, file) method
-                    Files.copy(file.toPath(), responseBody);
-                    responseBody.close();
-
+                    WriteToResponseBody(exchange, file);
                     success = true;
                 }
                 else {
-                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0); //TODO: Do I need to close the response here? Use the sendBadResponse method?
+                    exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
+                    file = new File("web/HTML/404.html");
+                    WriteToResponseBody(exchange, file);
                 }
             }
             else {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
+                exchange.getResponseBody().close();
             }
 
-            if(!success) {
+            if(!success && exchange.getResponseCode() == -1) {
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, 0);
+                exchange.getResponseBody().close();
             }
         }
         catch(IOException ex) {
             handleIOException(ex, exchange);
         }
-        exchange.getResponseBody().close();
     }
 
-
-
+    private void WriteToResponseBody(HttpExchange exchange, File file) throws IOException {
+        OutputStream responseBody = exchange.getResponseBody();
+        Files.copy(file.toPath(), responseBody);
+        responseBody.close();
+    }
 }

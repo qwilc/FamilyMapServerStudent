@@ -21,6 +21,7 @@ public class UserDAO extends DAO {
     public UserDAO(Connection conn) {
         super(conn);
         tableName = "user";
+        primaryKey = "username";
     }
 
     /**
@@ -59,26 +60,7 @@ public class UserDAO extends DAO {
      */
     @Override
     public User query(String username) throws DataAccessException {
-        User user;
-        ResultSet rs;
-
-        String sql = "select * from user where username = ?";
-
-        try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            rs = stmt.executeQuery();
-            if(rs.next()) {
-                user = (User) getModelFromResultSet(rs);
-                return user;
-            }
-            else {
-                return null;
-            }
-        }
-        catch(SQLException ex) {
-            ex.printStackTrace();
-            throw new DataAccessException();
-        }
+        return (User) super.query(username);
     }
 
     @Override
@@ -91,14 +73,6 @@ public class UserDAO extends DAO {
                 rs.getString("gender"),
                 rs.getString("personID") );
     }
-
-    /**
-     * Deletes the user with the specified username
-     *
-     * @param username the username
-     * @throws DataAccessException if an SQLException is caught
-     */
-    public void delete(String username) throws DataAccessException {}
 
     /**
      * Clears all rows of the user table in the database

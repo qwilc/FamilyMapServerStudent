@@ -1,10 +1,12 @@
 package treeGenerator;
 
+import com.google.gson.Gson;
 import dao.DataAccessException;
 import dao.EventDAO;
 import dao.PersonDAO;
 import helperData.DataReader;
 import helperData.Location;
+import logging.Logging;
 import model.Event;
 import model.Person;
 import model.User;
@@ -13,6 +15,7 @@ import java.sql.Connection;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TreeGenerator {
@@ -28,13 +31,23 @@ public class TreeGenerator {
         this.conn = conn;
         this.user = user;
         this.associatedUsername = user.getUsername();
+        Logging.initializeLogger(logger, Level.FINER);
     }
 
-    public void generateTree(int numGenerations) {
+    public void generateTree(int numGenerations) throws DataAccessException {
         Person userPerson = generateUserPerson();
         if(numGenerations > 0) {
             generateAncestors(userPerson, numGenerations);
         }
+        else {
+            addPersonToDatabase(userPerson);
+        }
+
+        PersonDAO personDAO = new PersonDAO(conn);
+
+        logger.finer("Does userPerson exist? " + (personDAO.query(user.getPersonID() ) != null) );
+        logger.finer("User's fatherID: " + userPerson.getFatherID());
+        logger.finer(personDAO.query(userPerson.getFatherID()).getPersonID());
     }
 
     public void generateAncestors(Person person, int numGenerations) {
@@ -49,6 +62,8 @@ public class TreeGenerator {
 
         person.setMotherID(mother.getPersonID());
         person.setFatherID(father.getPersonID());
+
+        logger.finest("Person's fatherID: " + person.getFatherID() + " Father's personID: " + father.getPersonID());
 
         addPersonToDatabase(person);
 
@@ -65,9 +80,9 @@ public class TreeGenerator {
 
     private void addPersonToDatabase(Person person) {
         try {
+            numPeopleAdded++;
             PersonDAO dao = new PersonDAO(conn);
             dao.insert(person);
-            numPeopleAdded++;
         }
         catch (DataAccessException ex) {
             logger.severe("Error inserting randomly generated person into database");
@@ -76,8 +91,15 @@ public class TreeGenerator {
     }
 
     public Person generateUserPerson() {
-        Person person = new Person(associatedUsername, user.getFirstName(), user.getLastName(), user.getGender(), null, null, null);
-        setRandomName(person);
+        Person person = new Person(
+                user.getPersonID(),
+                associatedUsername,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getGender(),
+                null,
+                null,
+                null);
 
         generateUserBirthEvent(person.getPersonID());
 

@@ -17,7 +17,7 @@ public class RegisterHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            if (exchange.getRequestMethod().toLowerCase().equals("post")) {
+            if (hasCorrectRequestMethod(exchange, "post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
                 requestBody.close();
@@ -36,8 +36,7 @@ public class RegisterHandler extends Handler {
             }
 
             if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
+                sendBadRequestResponse(exchange);
             }
         }
         catch (IOException ex) {

@@ -1,9 +1,6 @@
 package dao;
 
-import model.AuthToken;
-import model.Event;
 import model.Model;
-import model.Person;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,10 +17,29 @@ public abstract class DAO {
         this.conn = conn;
     }
 
-    protected abstract void insert(Model model) throws DataAccessException;
+    public abstract void insert(Model model) throws DataAccessException;
 
     public Model query(String identifier) throws DataAccessException {
-        return null;
+        Model modelObject;
+        ResultSet rs;
+
+        String sql = "select * from " + tableName + " where " + primaryKey + " = ?;";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, identifier);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                modelObject = getModelFromResultSet(rs);
+                return modelObject;
+            }
+            else {
+                return null;
+            }
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new DataAccessException();
+        }
     }
 
     public Model[] queryByUser(String username) throws DataAccessException { //TODO: This is only needed for Event/PersonDAO
@@ -70,5 +86,5 @@ public abstract class DAO {
         }
     }
 
-    public void clear() throws DataAccessException {}
+    public abstract void clear() throws DataAccessException;
 }

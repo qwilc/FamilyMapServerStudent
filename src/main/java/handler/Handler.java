@@ -14,8 +14,14 @@ public abstract class Handler implements HttpHandler {
     @Override
     public abstract void handle(HttpExchange exchange) throws IOException;
 
+    protected boolean hasCorrectRequestMethod(HttpExchange exchange, String method) {
+        return exchange.getRequestMethod().equalsIgnoreCase(method);
+    }
+
     protected void handleIOException(Throwable exception, HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+        if(exchange.getResponseCode() == -1) {
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_SERVER_ERROR, 0);
+        }
         exchange.getResponseBody().close();
         exception.printStackTrace();
     }
@@ -41,11 +47,12 @@ public abstract class Handler implements HttpHandler {
     }
 
     protected void sendResponse(HttpExchange exchange, Result result) throws IOException {
-        if(result.isSuccess()) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-        }
-        else {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+        if(exchange.getResponseCode() == -1) {
+            if (result.isSuccess()) {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            } else {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+            }
         }
 
         Writer responseBody = new OutputStreamWriter(exchange.getResponseBody());
@@ -55,7 +62,9 @@ public abstract class Handler implements HttpHandler {
     }
 
     protected void sendBadRequestResponse(HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+        if(exchange.getResponseCode() == -1) {
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+        }
         exchange.getResponseBody().close();
     }
 

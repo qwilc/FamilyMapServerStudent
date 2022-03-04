@@ -17,7 +17,7 @@ public class LoadHandler extends Handler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            if(exchange.getRequestMethod().toLowerCase().equals("post")) {
+            if(hasCorrectRequestMethod(exchange, "post")) {
                 InputStream requestBody = exchange.getRequestBody();
                 String requestData = readString(requestBody);
                 requestBody.close();
