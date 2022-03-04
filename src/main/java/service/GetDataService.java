@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public abstract class GetDataService {
     Result result;
 
-    protected Result getData(String authtoken, String ID) {
+    public Result getData(String authtoken, String ID) {
         Database database = new Database();
         initializeResult();
 

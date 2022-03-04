@@ -1,43 +1,16 @@
 package handler;
 
-import com.sun.net.httpserver.HttpExchange;
-import result.Result;
 import service.AllPeopleService;
 import service.PersonService;
 
-import java.io.IOException;
-
-public class PersonHandler extends Handler {
+public class PersonHandler extends GetDataHandler {
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        try {
-            if(hasCorrectRequestMethod(exchange, "get")) {
-                String[] splitPath = getSplitPath(exchange);
-                String authToken = getAuthToken(exchange);
+    protected void initializeAllModelsService() {
+        service = new AllPeopleService();
+    }
 
-                Result result;
-                if(splitPath.length > 2) {
-                    String personID = splitPath[2];
-                    PersonService service = new PersonService();
-                    result = service.person(authToken, personID);
-                }
-                else {
-                    AllPeopleService service = new AllPeopleService();
-                    result = service.people(authToken);
-                }
-
-                sendResponse(exchange, result);
-
-                success = result.isSuccess();
-            }
-
-            if(!success) {
-                sendBadRequestResponse(exchange);
-            }
-        }
-        catch (IOException ex) {
-            handleIOException(ex, exchange);
-        }
-        exchange.getResponseBody().close();
+    @Override
+    protected void initializeSingleModelService() {
+        service = new PersonService();
     }
 }

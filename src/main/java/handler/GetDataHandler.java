@@ -2,12 +2,13 @@ package handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import result.Result;
-import service.AllPeopleService;
-import service.PersonService;
+import service.GetDataService;
 
 import java.io.IOException;
 
-public class GetDataHandler extends Handler {
+public abstract class GetDataHandler extends Handler {
+    protected GetDataService service;
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
@@ -18,12 +19,13 @@ public class GetDataHandler extends Handler {
                 Result result;
                 if(splitPath.length > 2) {
                     String ID = splitPath[2];
-                    PersonService service = new PersonService();
-                    result = service.person(authToken, ID);
+                    initializeSingleModelService();
+
+                    result = service.getData(authToken, ID);
                 }
                 else {
-                    AllPeopleService service = new AllPeopleService();
-                    result = service.people(authToken);
+                    initializeAllModelsService();
+                    result = service.getData(authToken, null);
                 }
 
                 sendResponse(exchange, result);
@@ -40,4 +42,8 @@ public class GetDataHandler extends Handler {
         }
         exchange.getResponseBody().close();
     }
+
+    protected abstract void initializeAllModelsService();
+
+    protected abstract void initializeSingleModelService();
 }
