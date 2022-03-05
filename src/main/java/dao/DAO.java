@@ -43,6 +43,8 @@ public abstract class DAO {
     }
 
     public Model[] queryByUser(String username) throws DataAccessException {
+        assert(this.getClass() == PersonDAO.class || this.getClass() == EventDAO.class);
+
         Model model;
         ArrayList<Model> data = new ArrayList<>();
         ResultSet rs;

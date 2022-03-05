@@ -7,7 +7,6 @@ import model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import result.AllEventsResult;
-import result.AllPeopleResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +17,7 @@ public class AllEventsServiceTest extends ServiceTest{
     private final String authTokenString = "token";
 
     @BeforeEach
-    public void insertUser() throws DataAccessException {
+    public void insertData() throws DataAccessException {
         clearService.clear();
         db = new Database();
 
@@ -43,7 +42,7 @@ public class AllEventsServiceTest extends ServiceTest{
     }
 
     @Test
-    public void testGetAllEvents() throws DataAccessException {
+    public void testEvents() throws DataAccessException {
         AllEventsResult result = service.events(authTokenString);
 
         assertNotNull(result);

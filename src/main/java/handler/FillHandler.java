@@ -1,7 +1,7 @@
 package handler;
 
 import com.sun.net.httpserver.HttpExchange;
-import logging.Logging;
+import logger.LoggerConfig;
 import result.Result;
 import service.FillService;
 
@@ -14,7 +14,7 @@ public class FillHandler extends Handler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Logging.initializeLogger(logger, Level.FINER);
+        LoggerConfig.configureLogger(logger, Level.FINER);
 
         try {
             if(hasCorrectRequestMethod(exchange, "post")) {

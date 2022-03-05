@@ -4,12 +4,14 @@ import model.Model;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.ClearService;
 
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class DAOTest {
+    ClearService clearService = new ClearService();
     protected Database db;
     protected Model model;
     protected DAO dao;
@@ -17,6 +19,7 @@ public abstract class DAOTest {
 
     @BeforeEach
     public void setUp() throws DataAccessException {
+        clearService.clear();
         db = new Database();
         Connection conn = db.getConnection();
         this.initializeInstanceVariables(conn);
@@ -66,6 +69,12 @@ public abstract class DAOTest {
     @Test
     public void testClear() throws DataAccessException {
         dao.insert(model);
+        dao.clear();
+        assertNull(dao.query(primaryKey));
+    }
+
+    @Test
+    public void testClearEmpty() throws DataAccessException {
         dao.clear();
         assertNull(dao.query(primaryKey));
     }

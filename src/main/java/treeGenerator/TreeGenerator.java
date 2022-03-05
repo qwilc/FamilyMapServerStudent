@@ -5,7 +5,7 @@ import dao.EventDAO;
 import dao.PersonDAO;
 import helperData.DataReader;
 import helperData.Location;
-import logging.Logging;
+import logger.LoggerConfig;
 import model.Event;
 import model.Person;
 import model.User;
@@ -30,7 +30,7 @@ public class TreeGenerator {
         this.conn = conn;
         this.user = user;
         this.associatedUsername = user.getUsername();
-        Logging.initializeLogger(logger, Level.FINER);
+        LoggerConfig.configureLogger(logger, Level.FINER);
     }
 
     public void generateTree(int numGenerations) throws DataAccessException {

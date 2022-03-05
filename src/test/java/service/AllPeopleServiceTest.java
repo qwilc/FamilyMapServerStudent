@@ -39,7 +39,7 @@ public class AllPeopleServiceTest extends ServiceTest {
     }
 
     @Test
-    public void testGetAllPeople() {
+    public void testPeople() {
         AllPeopleResult result = service.people(authTokenString);
 
         assertNotNull(result);

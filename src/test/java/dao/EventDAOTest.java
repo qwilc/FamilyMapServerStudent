@@ -1,14 +1,14 @@
 package dao;
 
 import model.Event;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.ClearService;
 
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EventDAOTest extends DAOTest {
+public class EventDAOTest extends PersonAndEventTest {
     Event testEvent = new Event("ID1", "username", "personID1", 1, 2, "country",
             "city", "type", 1900);
 
@@ -20,20 +20,22 @@ public class EventDAOTest extends DAOTest {
     @Override
     protected void initializeInstanceVariables(Connection conn) {
         this.primaryKey = "ID";
-        this.model = new Event(primaryKey, "username", "personID1", 1, 2, "country",
+        this.model = new Event(primaryKey, "testUsername", "personID1", 1, 2, "country",
                 "city", "type", 1900);
         this.dao = new EventDAO(conn);
     }
 
-    @Test
-    public void testQueryByPerson() throws DataAccessException {
-        ClearService service = new ClearService();
-        service.clear();
+    @BeforeEach
+    public void eventSetUp() throws DataAccessException {
+        clearService.clear();
 
         dao.insert(testEvent);
         dao.insert(testEvent2);
         dao.insert(testEvent3);
+    }
 
+    @Test
+    public void testQueryByPerson() throws DataAccessException {
         Event[] compareTest = ((EventDAO)dao).queryByPerson("personID1");
 
         assertEquals(2, compareTest.length);
@@ -45,19 +47,31 @@ public class EventDAOTest extends DAOTest {
     }
 
     @Test
+    public void testQueryByInvalidPerson() throws DataAccessException {
+        Event[] compareTest = ((EventDAO)dao).queryByPerson("invalidID");
+
+        assertNull(compareTest);
+    }
+
+    @Test
     public void testQueryByPersonAndType() throws DataAccessException {
-        ClearService service = new ClearService();
-        service.clear();
-
-        dao.insert(testEvent);
-        dao.insert(testEvent2);
-        dao.insert(testEvent3);
-
         Event[] compareTest = ((EventDAO)dao).queryByPersonAndType("personID1", "death");
 
         assertEquals(1, compareTest.length);
         assertNotNull(compareTest[0]);
 
         assertEquals("ID3", compareTest[0].getEventID());
+    }
+
+    @Test
+    public void testQueryByPersonAndType_InvalidType() throws DataAccessException {
+        Event[] compareTest = ((EventDAO)dao).queryByPersonAndType("personID1", "mawwiage");
+        assertNull(compareTest);
+    }
+
+    @Test
+    public void testQueryByPersonAndType_InvalidPersonID() throws DataAccessException {
+        Event[] compareTest = ((EventDAO)dao).queryByPersonAndType("badID", "death");
+        assertNull(compareTest);
     }
 }

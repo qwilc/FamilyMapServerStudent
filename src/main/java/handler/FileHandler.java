@@ -1,7 +1,7 @@
 package handler;
 
 import com.sun.net.httpserver.HttpExchange;
-import logging.Logging;
+import logger.LoggerConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class FileHandler extends Handler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Logging.initializeLogger(logger, Level.FINE);
+        LoggerConfig.configureLogger(logger, Level.FINE);
         logger.fine("Handling file request");
         try {
             if(hasCorrectRequestMethod(exchange, "get")) {

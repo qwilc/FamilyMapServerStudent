@@ -1,18 +1,14 @@
 package dao;
 
-import model.AuthToken;
 import model.Model;
 import model.Person;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.ClearService;
 
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PersonDAOTest extends DAOTest {
+public class PersonDAOTest extends PersonAndEventTest {
     @Override
     protected void initializeInstanceVariables(Connection conn) {
         this.primaryKey = "ID";
